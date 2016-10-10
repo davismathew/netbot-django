@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{{ result.name }}{% endblock %}
+
+{% block head %}
+  <link href="{% static 'css/articles.css' %}" rel="stylesheet">
+  <script src="{% static 'js/articles.js' %}"></script>
+{% endblock head %}
+
+{% block main %}
+  <ol class="breadcrumb">
+    <li><a href="{% url 'results' %}">{% trans 'Results' %}</a></li>
+    <li class="active">{% trans 'Result Details' %}</li>
+  </ol>
+{{ result }}
+
+{% endblock main %}

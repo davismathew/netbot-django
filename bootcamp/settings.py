@@ -14,8 +14,19 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 TEMPLATE_DEBUG = DEBUG
 
+#DATABASES = {
+#    'default': dj_database_url.config(default=config('DATABASE_URL'))
+#}
+
 DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bootcamp',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+    }
 }
 
 ALLOWED_HOSTS = ['*']
@@ -31,9 +42,13 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
 
     'bootcamp.activities',
-    'bootcamp.articles',
     'bootcamp.authentication',
+    'bootcamp.articles',
+    'bootcamp.inventories',
+    'bootcamp.results',
+    'bootcamp.traceroute',
     'bootcamp.core',
+    'bootcamp.tasks',
     'bootcamp.feeds',
     'bootcamp.messenger',
     'bootcamp.questions',

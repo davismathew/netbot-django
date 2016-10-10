@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.contrib.auth.models import User
 from bootcamp.feeds.models import Feed
+from bootcamp.tasks.models import Task
 from bootcamp.articles.models import Article
 from bootcamp.questions.models import Question
 from django.contrib.auth.decorators import login_required
@@ -16,14 +17,15 @@ def search(request):
 
         try:
             search_type = request.GET.get('type')
-            if search_type not in ['feed', 'articles', 'questions', 'users']:
-                search_type = 'feed'
+            if search_type not in ['tasks','feed', 'articles', 'questions', 'users']:
+                search_type = 'tasks'
 
         except Exception, e:
-            search_type = 'feed'
+            search_type = 'tasks'
 
         count = {}
         results = {}
+        results['tasks'] = Task.objects.filter(name__icontains=querystring)
         results['feed'] = Feed.objects.filter(post__icontains=querystring,
                                               parent=None)
         results['articles'] = Article.objects.filter(
@@ -36,16 +38,19 @@ def search(request):
             Q(username__icontains=querystring) | Q(
                 first_name__icontains=querystring) | Q(
                     last_name__icontains=querystring))
+        count['tasks'] = results['tasks'].count()
         count['feed'] = results['feed'].count()
         count['articles'] = results['articles'].count()
         count['questions'] = results['questions'].count()
         count['users'] = results['users'].count()
+        baseurl = "http://127.0.0.1:8000"
 
         return render(request, 'search/results.html', {
             'hide_search': True,
             'querystring': querystring,
             'active': search_type,
             'count': count,
+            'baseurl': baseurl,
             'results': results[search_type],
         })
     else:

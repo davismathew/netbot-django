@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<h2>{% trans 'Tasks' %}</h2>
+{% if results %}
+  <ul class="tasks-results">
+    {% for task in results %}
+      <li article-slug="{{ article.slug }}">
+        <h4><a href="{{ baseurl }}/tasks/runtask/{{ task.id }}">{{ task.name }}</a></h4>
+        <div class="info">
+          <span class="date">
+            <span class="glyphicon glyphicon-calendar"></span>
+            {{ task.create_date }}
+          </span>
+          <span class="user">
+          </span>
+        </div>
+        <div class="article-content">{{ article.get_summary_as_markdown|safe }}</div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <h4 class="no-result">{% trans 'No tasks found' %} :(</h4>
+{% endif %}

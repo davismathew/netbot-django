@@ -31,13 +31,15 @@
   </div>
   <div class="row results">
     <div class="col-md-3">
-      {% include 'search/partial_results_menu.html' with active=active count=count querystring=querystring %}
+      {% include 'search/partial_results_menu.html' with active=active count=count querystring=querystring baseurl=baseurl %}
     </div>
     <div class="col-md-9">
       {% if active == 'feed' %}
         {% include 'search/partial_feed_results.html' with results=results %}
       {% elif active == 'articles' %}
         {% include 'search/partial_articles_results.html' with results=results %}
+      {% elif active == 'tasks' %}
+        {% include 'search/partial_tasks_results.html' with results=results %}
       {% elif active == 'questions' %}
         {% include 'search/partial_questions_results.html' with results=results %}
       {% elif active == 'users' %}

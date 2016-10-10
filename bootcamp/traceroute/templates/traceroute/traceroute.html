@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}Traceroute{% endblock %}
+
+{% block head %}
+  <link href="{% static 'css/articles.css' %}" rel="stylesheet">
+  <script src="{% static 'js/articles.js' %}"></script>
+{% endblock head %}
+
+{% block main %}
+  <ol class="breadcrumb">
+    <li><a href="{% url 'traceroute' %}">{% trans 'Traceroute' %}</a></li>
+  </ol>
+<style type="text/css">
+    form {
+  /* Just to center the form on the page */
+  margin: 0 auto;
+  width: 500px;
+
+  /* To see the limits of the form */
+  padding: 1em;
+  border: 1px solid #CCC;
+  border-radius: 1em;
+}
+
+div + div {
+  margin-top: 1em;
+}
+
+label {
+  /* To make sure that all label have the same size and are properly align */
+  display: inline-block;
+  width: 120px;
+  text-align: right;
+}
+
+input, textarea {
+  /* To make sure that all text field have the same font settings
+     By default, textarea are set with a monospace font */
+  font: 1em sans-serif;
+
+  /* To give the same size to all text field */
+  width: 250px;
+
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+
+  /* To harmonize the look & feel of text field border */
+  border: 1px solid #999;
+}
+
+input:focus, textarea:focus {
+  /* To give a little highligh on active elements */
+  border-color: #000;
+}
+
+.button {
+  /* To position the buttons to the same position of the text fields */
+  padding-left: 90px; /* same size as the label elements */
+}
+
+button {
+  /* This extra magin represent the same space as the space between
+     the labels and their text fields */
+  margin-left: .5em;
+}
+</style>
+
+
+<form action="/gettraceroute" method="GET">
+    <div>
+        <label for="sip">Source IP:</label>
+        <input type="text" id="sip" name="source_ip" />
+    </div>
+    <div>
+        <label for="dip">Destination IP:</label>
+        <input type="text" id="dip" name="dest_ip" />
+    </div>
+
+            <div><label for="vrf">Use vrf name:</label>
+    <input type="checkbox" id="vrf" name="vrf" value="true" checked="checked"/></div>
+            <div><label for="vrfdropdown">VRF Names:</label>
+
+                <select name="vrfname" id="vrfdropdown">
+            {% for vrf in vrfname %}
+                <option value={{ vrf }}>{{ vrf }}</option>
+            {% endfor %}
+                </select></div>
+    <div class="button">
+        <button type="submit">Traceroute</button>
+    </div>
+</form>
+
+
+{% endblock main %}
