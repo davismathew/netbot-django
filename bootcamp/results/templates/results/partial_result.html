@@ -1,4 +1,4 @@
-<article>
+<article xmlns="http://www.w3.org/1999/html">
           <div class="container">
             <div class="row">
                 <div class="col-lg-6  col-md-2 col-sm-4 col-xs-6">
@@ -7,7 +7,7 @@
                 <div class="col-lg-6  col-md-2 col-sm-4 col-xs-6">
                     <h3><strong><span class="label label-warning">Action</span></strong></h3>
                 </div>
-                </div>
+            </div>
           <div class="container">
                 <div class="col-lg-6  col-md-2 col-sm-4 col-xs-6">
                     <h3><a href="{{ baseurl }}/results/edit/{{ result.id }}"> {{ result.name }} </a></h3>
@@ -15,44 +15,28 @@
                     </ul>
                 </div>
                 <div class="col-lg-6  col-md-2 col-sm-4 col-xs-6">
-                  <form action="http://127.0.0.1/createresult/" method="POST">
+
+                  <form action="/results/rerunresult/" method="POST">
                       {% csrf_token %}
-                  <div class="col-xs-6">
-                  <div class="form-group">
-                    <label for="inventory"><h4>Choose Inventory</h4></label>
-                      <select class="form-control" name="inventory" id="inventory">
-                        {% if inventory.network == 'EMC' %}
-                          {{ inventory.network }}
-                          {% for inv in emcinventory %}
-
-                        <option value={{ inv.name }}>{{ inv.name }}</option>
-
-                          {% endfor %}
-                        {% endif %}
-
-                        {% if inventory.network == 'MTN' %}
-                          {{ inventory.network }}
-                          {% for inv in mtninventory %}
-
-                        <option value={{ inv.name }}>{{ inv.name }}</option>
-
-                          {% endfor %}
-                        {% endif %}
-
-                      </select>
-                   </div>
-                    </div><div class="col-xs-6">
+                      <input type="hidden" name="resultid" value="{{ result.id }}" id="resultid">
+                    <div class="col-xs-6">
                                       <label for="run"><h4></h4></label>
                       <ul>
+                          {{ result.playbook }}</br>
+                          {{ result.network }}</br>
+                          {{ result.inventory }}</br>
                       </ul>
-
-                        <button type="submit" class="btn btn-primary" value="run" id="run">Run inventory</button></div>
-                    </form>
+                    </div>
+                    <div class="col-xs-6">
+                        <button type="submit" class="btn btn-primary" value="run" id="run">Rerun result</button></div>
                     <ul>
                     </ul>
+                      </div>
                 </div>
-                </div>
-                        {% if inventory.factstatus == 'true' %}
+
+              </div>
+
+                        {% if task.factstatus == 'true' %}
 
                 <div class="container">
                     <div class="row">
@@ -66,17 +50,18 @@
                     </div>
                 </div>
                         {% endif %}
+                    </form>
+                      <div class="info">
+                        <span class="date">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        {{ result.create_date }}
+                        </span>
+                        <span class="user">
+                            <a href="{% url 'profile' result.create_user.username %}"><img src="{{ result.create_user.profile.get_picture }}"></a>
+                            <a href="{% url 'profile' result.create_user.username %}">{{ result.create_user.profile.get_screen_name }}</a>
+                        </span>
+                      </div>
 
-  <div class="info">
-    <span class="date">
-      <span class="glyphicon glyphicon-calendar"></span>
-      {{ result.create_date }}
-    </span>
-    <span class="user">
-      <a href="{% url 'profile' result.create_user.username %}"><img src="{{ result.create_user.profile.get_picture }}"></a>
-      <a href="{% url 'profile' result.create_user.username %}">{{ result.create_user.profile.get_screen_name }}</a>
-    </span>
-  </div>
 
             </div>
 </div>

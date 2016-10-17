@@ -3,6 +3,8 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from bootcamp.feeds.models import Feed
 from bootcamp.tasks.models import Task
+from bootcamp.inventories.models import Inventory
+from bootcamp.results.models import Result
 from bootcamp.articles.models import Article
 from bootcamp.questions.models import Question
 from django.contrib.auth.decorators import login_required
@@ -17,7 +19,7 @@ def search(request):
 
         try:
             search_type = request.GET.get('type')
-            if search_type not in ['tasks','feed', 'articles', 'questions', 'users']:
+            if search_type not in ['results','inventories','tasks','feed', 'articles', 'questions', 'users']:
                 search_type = 'tasks'
 
         except Exception, e:
@@ -26,6 +28,8 @@ def search(request):
         count = {}
         results = {}
         results['tasks'] = Task.objects.filter(name__icontains=querystring)
+        results['inventories'] = Inventory.objects.filter(name__icontains=querystring)
+        results['results'] = Result.objects.filter(name__icontains=querystring)
         results['feed'] = Feed.objects.filter(post__icontains=querystring,
                                               parent=None)
         results['articles'] = Article.objects.filter(
@@ -39,6 +43,8 @@ def search(request):
                 first_name__icontains=querystring) | Q(
                     last_name__icontains=querystring))
         count['tasks'] = results['tasks'].count()
+        count['inventories'] = results['inventories'].count()
+        count['results'] = results['results'].count()
         count['feed'] = results['feed'].count()
         count['articles'] = results['articles'].count()
         count['questions'] = results['questions'].count()

@@ -34,12 +34,12 @@
                 <td class="col-xs-2.5"><a href="{% url 'results' %}">{{ result.name }}</a></td>
                 <td class="col-xs-2.5">{{ result.description }}</td>
                 <td class="col-xs-2.5">{{ result.variable }}</td>
-                <td class="col-xs-2.5">
-                    <a href="{{ baseurl }}/results/createresult/{{ task.id }}">
+                <td class="col-xs-2.5"><a href="{{ baseurl }}/results/getresultout/{{ result.id }}">&nbsp;&nbsp;<span style="font-size:1.5em;" class="glyphicon glyphicon-export" aria-hidden="true"></span></a>
+
+                    <a href="{{ baseurl }}/results/resultdetails/{{ result.id }}">
                         <span style="font-size:1.5em;" class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
                             </a>
-                        Run Task &nbsp;&nbsp;
-
+                        Rerun Result &nbsp;&nbsp;
                 </td>
             </tr>
             {% empty %}

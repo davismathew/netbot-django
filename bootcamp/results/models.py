@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from bootcamp.tasks.models import Task
+from bootcamp.inventories.models import Inventory
 from datetime import datetime
 from django.template.defaultfilters import slugify
 import markdown
@@ -18,12 +20,15 @@ class Result(models.Model):
     network = models.CharField(max_length=255, null=True, default="EMC")
     inventory = models.CharField(max_length=255, null=True)
     factfile = models.CharField(max_length=255, null=True)
+    factstatus = models.CharField(max_length=255, null=True)
     playbook = models.CharField(max_length=255, null=True)
+    outputfile = models.CharField(max_length=255, null=True)
     credential = models.CharField(max_length=255, null=True)
     slug = models.SlugField(max_length=255, null=True, blank=True)
     tags = models.TextField(max_length=255, null=True)
     description = models.TextField(max_length=4000)
     status = models.CharField(max_length=1, choices=STATUS, default=ACTIVE)
+    task = models.ForeignKey(Task, null=True)
     create_user = models.ForeignKey(User)
     create_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(blank=True, null=True)

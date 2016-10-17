@@ -1,0 +1,440 @@
+{% extends "base.html" %}
+
+{% block title %}Ansible{% endblock %}
+{% block page_content %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    
+    <style>
+
+div#spinner
+{
+    display: none;
+    width:100px;
+    height: 100px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background:url(/static/loading.gif) no-repeat center #fff;
+    text-align:center;
+    padding:10px;
+    font:normal 16px Tahoma, Geneva, sans-serif;
+    border:1px solid #666;
+    margin-left: -50px;
+    margin-top: -50px;
+    z-index:2;
+    overflow: auto;
+}
+
+
+
+table.hovertable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #999999;
+	border-collapse: collapse;
+}
+table.hovertable th {
+	background-color:#c3dde0;
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+table.hovertable tr {
+	background-color:#d4e3e5;
+}
+table.hovertable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+
+ table {
+  width: 50%;
+  height: 50%;
+  word-wrap:break-word;
+}
+.theCell{
+    display:table-cell;
+    padding: 0px 2px; /* just some padding, if needed*/
+    white-space: pre; /* this will avoid line breaks*/
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;	
+  text-decoration: none;
+  outline: none;
+  color: red;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0 9px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: red;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.delete {
+    background: url(http://cssdeck.com/uploads/media/items/5/5Fm069k.png)  10px -61px no-repeat #f3f3f3;
+    padding-left: 30px;
+}
+
+</style>
+    
+   
+
+<script>
+    
+    $(document).ready(function() {
+        var server=$('#server').val(); 
+        $('#mytable').on('click', '.removeButton', function(events){
+                    var ICID = $(this).closest('tr').find('td').eq(0).html(); 
+                    var city = $(this).closest('tr').find('td').eq(1).html(); 
+                    var identity=$(this).closest('tr').find('td').eq(3).html();
+                    var tr=$(this).closest('tr');
+                    if(identity == "NS")
+                       {
+                                $.ajax({
+                                          type: "DELETE",
+                                          url: "http://"+server+":5000/delONSRecord",
+				          data: { nodeName : ICID, city : city }, // post values
+                                          success:function(result){
+                                                        tr.remove();
+                                            },
+			                  error:function(xhr, status, error) {
+                                                    alert(xhr.status);
+                                                    alert(status);
+                                           }
+                                      });
+                      }
+                    else
+                      { 
+    
+                           $.ajax({
+                                     type: "DELETE",
+                                     url: "http://"+server+":5000/delCCSRecord",
+                                     data: { icd : ICID }, // post values
+                                     success:function(result){
+                                                  tr.remove();
+                                      },
+		                    error:function(xhr, status, error) {
+                                  
+                                           alert(xhr.status);
+                                           alert(status);
+                                     }
+		     
+                                  });
+    
+                        }
+            });
+  
+  
+        $('.testAllButton').on('click', function(events){
+                var data = "";
+               $("table tr").each(function(i, v){
+		      $(this).children('td').each(function(ii, vv){
+                                 data+= $(this).text()+",";
+                         }); 
+	                data+="*";
+                 });
+	       
+                $.ajax({
+                            type: "POST",
+                            url: "http://"+server+":5000/allRowPingTest",
+                            data: { value : data }, // post values
+                            success:function(result){
+				       $('#AllResult').text(result.value);
+				       
+                             },
+		             error:function(xhr, status, error) {
+                                 
+                                     alert(xhr.status);
+                                     alert(status);
+                            }
+                  });
+    
+       });
+  
+  
+       $('#mytable').on('click', '.delete', function(events){
+     
+                var tr=$(this).closest('tr');
+                tr.remove();
+    
+        });
+
+       $('#mytable').on('click', '.testButton', function(events){
+   
+             
+             var cAEnd = $(this).closest('tr').find('td').eq(4).html(); 
+             var cAEndInt = $(this).closest('tr').find('td').eq(5).html(); 
+             var cAEndIP=$(this).closest('tr').find('td').eq(6).html();
+    
+             var cZEnd = $(this).closest('tr').find('td').eq(7).html(); 
+             var cZEndInt = $(this).closest('tr').find('td').eq(8).html(); 
+             var cZEndIP=$(this).closest('tr').find('td').eq(9).html();
+             var tr=$(this).closest('tr');
+             $.ajax({
+                      type: "POST",
+                      url: "http://"+server+":5000/rowPingTest",
+                      data: { ca : cAEnd, cai : cAEndInt, caa:cAEndIP, cz:cZEnd, czi:cZEndInt, cza:cZEndIP}, // post values
+                      success:function(result){
+				   str="<tr><td colspan=\"14\" bgcolor=\"white\">"+result.value+"  <button class=\"delete\">Remove</button></td></tr>";
+				   tr.after(str);
+				   
+                        },
+		     error:function(xhr, status, error) {
+                                 
+                                  alert(xhr.status);
+                                  alert(status);
+                      }
+              });
+    
+    
+      });
+  
+
+  
+});
+
+  function displayDetails(tableName) {
+	      
+                    var server=$('#server').val();
+		    if(server == "EMC")
+		      {
+		        var server="200.12.221.43";
+		      }
+		      else if(server == "MTN")
+		      {
+		        var server="10.200.96.103";
+		      }
+		    
+  
+                     if(tableName == "CS")
+                       {
+                                $.ajax({
+                                          type: "POST",
+                                          url: "http://"+server+":5000/coreCircuitDetails",
+                                          
+                                          success:function(result){
+					  
+					      if(result.check == "False")
+					      {
+					         $('#No').text("No Data Found");
+					      }
+					      else {
+					      
+					                   $('#mytable').empty();
+						           var array=return.value;
+							   var head="yes";
+							   var htmlTags="";
+							    $.each(array,function(index,listvalue) {
+							            htmlTags+=" <tr onmouseover\this.style.backgroundColor=\'#ffff66\';\" onmouseout=\"this.style.backgroundColor=\'#d4e3e5\';\">";
+							           if(head == "yes") {
+								                $.each(listvalue,function(index,value) {
+							                             htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">"+value+"</th>";
+							      
+							                        });
+									        htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">Operation </th>";
+								    
+								    } else {
+
+                                                                                 $.each(listvalue,function(index,value) {
+										 
+							                             htmlTags+="<td style=\"overflow: hidden;\" class=\"theCell\">"+value+"</td>";
+							      
+							                           });	
+										    htmlTags+="<td><button type=\"submit\" class=\"btn testButton\">Test</button></td>";
+								                    
+								    
+								      }
+								      htmlTags+="</tr>";
+								      head="no";
+							      
+							 });
+							 
+						   $("#mytable").append(htmlTags);
+
+					      
+					      }
+                                                        
+                                            },
+			                  error:function(xhr, status, error) {
+                                                    alert(xhr.status);
+                                                    alert(status);
+                                           }
+                                      });
+                      }
+		      else if(tableName == "CSS")
+		      {
+                          $.ajax({
+                                          type: "POST",
+                                          url: "http://"+server+":5000/coreCircuitStates",
+                                          
+                                          success:function(result){
+					      
+                                                    if(result.check == "False")
+					             {
+					                 $('#No').text("No Data Found");
+					              }
+					              else {
+						      
+						           $('#mytable').empty();
+						           var array=return.value;
+							   var head="yes";
+							   var htmlTags="";
+							    $.each(array,function(index,listvalue) {
+							            htmlTags+=" <tr onmouseover\this.style.backgroundColor=\'#ffff66\';\" onmouseout=\"this.style.backgroundColor=\'#d4e3e5\';\">";
+							           if(head == "yes") {
+								                $.each(listvalue,function(index,value) {
+							                             htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">"+value+"</th>";
+							      
+							                        });
+									        htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">Operation </th>";
+								    
+								    } else {
+
+                                                                                 $.each(listvalue,function(index,value) {
+										 
+							                             htmlTags+="<td style=\"overflow: hidden;\" class=\"theCell\">"+value+"</td>";
+							      
+							                           });								    
+								                    htmlTags+="<td style=\"display:none;\">CS</td>"
+                                                                                    htmlTags+="<td><button type=\"submit\" class=\"btn removeButton delete\">Remove</button></td>";
+								    
+								      }
+								      htmlTags+="</tr>";
+								      head="no";
+							      
+							 });
+							 
+							 $("#mytable").append(htmlTags);
+
+						            
+					             }   
+                                            },
+			                  error:function(xhr, status, error) {
+                                                    alert(xhr.status);
+                                                    alert(status);
+                                           }
+                                      });		       
+		       
+		      } 
+		      else if(tableName == "NS")
+		      {
+                          $.ajax({
+                                          type: "POST",
+                                          url: "http://"+server+":5000/orionNodeStates",
+                                          success:function(result){
+                                                 if(result.check == "False")
+					          {
+					            $('#No').text("No Data Found");
+					          }
+					         else {
+						        $('#mytable').empty();
+						         var array=return.value;
+							 var head="yes";
+							 var htmlTags="";
+							 $.each(array,function(index,listvalue) {
+							     htmlTags+=" <tr onmouseover\this.style.backgroundColor=\'#ffff66\';\" onmouseout=\"this.style.backgroundColor=\'#d4e3e5\';\">";
+							        if(head == "yes") {
+								              $.each(listvalue,function(index,value) {
+							                           htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">"+value+"</th>";
+							      
+							                      });
+									       htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">Operation </th>";
+								    
+								      } else {
+
+                                                                                 $.each(listvalue,function(index,value) {
+										 
+							                             htmlTags+="<td style=\"overflow: hidden;\" class=\"theCell\">"+value+"</td>";
+							      
+							                           });								    
+								                    htmlTags+="<td style=\"display:none;\">NS</td>"
+                                                                                    htmlTags+="<td><button type=\"submit\" class=\"btn removeButton delete\">Remove</button></td>";
+								    
+								      }
+								      htmlTags+="</tr>";
+								      head="no";
+							      
+							 });
+							 
+							 $("#mytable").append(htmlTags);
+					      
+					           }                                                   
+                                                        
+                                            },
+			                  error:function(xhr, status, error) {
+                                                    alert(xhr.status);
+                                                    alert(status);
+                                           }
+                                      });		       
+		       
+		      } 
+		      
+  
+          }
+
+
+</script>
+
+
+
+
+
+       <!--  <div class="jumbotron"> -->
+       
+
+
+       <center>
+       </center>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <select id="server" class="navbar-text">
+      <option value="EMC">EMC</option>
+      <option value="MTN">MTN</option>
+      </select>
+       <p class="navbar-text navbar-right" id="downloadlink" ><a href="javascript:displayDetails('NS')" class="navbar-link">OrionNodeStatus</a></p>
+       <p class="navbar-text navbar-right" id="downloadlink" ><a href="javascript:displayDetails('CSS')" class="navbar-link">CoreCircuitStates</a></p>
+       <p class="navbar-text navbar-right" id="downloadlink"><a href="javascript:displayDetails('CS')" class="navbar-link">CoreCircuitDetails</a></p>
+        <div class="bs-example clearfix">
+	
+       <table width="80%" border="1" cellspacing="0" cellpadding="0" id="mytable" class="hovertable">
+       </table>
+       <p id="No"></p>
+       
+       <div id="AllResult"></div>
+
+</div>
+
+    </div>
+  </div>
+</nav>
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
+

@@ -14,7 +14,7 @@
     <li><a href="{% url 'results' %}">{% trans 'Results' %}</a></li>
     <li class="active">{% trans 'Result Details' %}</li>
   </ol>
+{{ result }}
 
-  {% include 'results/partial_result.html' with result=result emcinventory=emcinventory mtninventory=mtninventory  %}
 
 {% endblock main %}

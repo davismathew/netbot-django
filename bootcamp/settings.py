@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'bootcamp.articles',
     'bootcamp.inventories',
     'bootcamp.results',
+    'bootcamp.cmapp',
     'bootcamp.traceroute',
     'bootcamp.core',
     'bootcamp.tasks',

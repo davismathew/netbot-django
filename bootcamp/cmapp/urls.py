@@ -1,15 +1,14 @@
 # coding: utf-8
 
 from django.conf.urls import patterns, include, url
-from django.views.decorators.csrf import csrf_exempt
 
-from bootcamp.traceroute import views
+from bootcamp.cmapp import views
 
 urlpatterns = [
-    url(r'^$', views.traceroute, name='traceroute'),
-    url(r'^mtn/$', views.mtntraceroute, name='mtntraceroute'),
-    url(r'^gettrace/$', views.gettraceroute, name='gettrace'),
-    url(r'^runtraceroute/$', csrf_exempt(views.runtraceroute), name='runtraceroute'),
+    url(r'^$', views.emccm, name='cmapp'),
+    url(r'^emccm/$', views.emccm, name='emccm'),
+    url(r'^mtncm/$', views.mtncm, name='mtncm'),
+    # url(r'^inventorydetails/(?P<id>\d+)/$', views.inventorydetails, name='inventorydetails'),
     # url(r'^preview/$', views.preview, name='preview'),
     # url(r'^drafts/$', views.drafts, name='drafts'),
     # url(r'^comment/$', views.comment, name='comment'),

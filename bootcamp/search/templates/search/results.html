@@ -40,6 +40,10 @@
         {% include 'search/partial_articles_results.html' with results=results %}
       {% elif active == 'tasks' %}
         {% include 'search/partial_tasks_results.html' with results=results %}
+      {% elif active == 'results' %}
+        {% include 'search/partial_results_results.html' with results=results %}
+      {% elif active == 'inventory' %}
+        {% include 'search/partial_inventory_results.html' with results=results %}
       {% elif active == 'questions' %}
         {% include 'search/partial_questions_results.html' with results=results %}
       {% elif active == 'users' %}

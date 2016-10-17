@@ -43,7 +43,7 @@
                 </td>
             </tr>
             {% empty %}
-          <h4 class="no-data">{% trans 'There is no task created yet' %}. <a href="{% url 'write' %}">{% trans 'Be the first one to create' %}!</a></h4>
+          <h4 class="no-data">{% trans 'There is no task created yet' %}. <a href="{% url 'createtask' %}">{% trans 'Be the first one to create' %}!</a></h4>
         {% endfor %}
         </tbody>
 </table>

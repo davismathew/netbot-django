@@ -27,12 +27,12 @@ $(document).ready(function() {
     <!--alert(playbookName);-->
     $('#progress').show();
     $.ajax({
-                     type: "POST",
-                     url: "http://200.12.221.13:5005/runtraceroute",
-                     data: { ip : ip },
+                     type: "GET",
+                     url: "http://127.0.0.1:8000/traceroute/runtraceroute/",
+                     <!--data: { ip : ip },-->
 
                    success:function(result){
-                                  //alert(result);
+                                  <!--alert(result);-->
                                   $('#AllResult').show();
                                   $('#downloadlink').show();
                                   $('#progress').hide();

@@ -6,10 +6,12 @@ from bootcamp.results import views
 
 urlpatterns = [
     url(r'^$', views.results, name='results'),
-    url(r'^createresult/$', views.createresult, name='createresult'),
-    url(r'^testpost/$', csrf_exempt(views.testpost), name='testpost'),
-    url(r'^cmapp/$', csrf_exempt(views.cmapp), name='cmapp'),
+    url(r'^runresult/$', csrf_exempt(views.runresult), name='runresult'),
+    url(r'^createresult/$', csrf_exempt(views.createresult), name='createresult'),
+    url(r'^rerunresult/$', csrf_exempt(views.rerunresult), name='rerunresult'),
+    url(r'^resultoutput/$', csrf_exempt(views.resultoutput), name='resultoutput'),
     url(r'^resultdetails/(?P<id>\d+)/$', csrf_exempt(views.resultdetails), name='resultdetails'),
+    url(r'^getresultout/(?P<id>\d+)/$', csrf_exempt(views.getresultout), name='getresultout'),
     # url(r'^preview/$', views.preview, name='preview'),
     # url(r'^drafts/$', views.drafts, name='drafts'),
     # url(r'^comment/$', views.comment, name='comment'),

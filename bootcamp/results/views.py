@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseBadRequest, HttpResponse
 from bootcamp.results.models import Result
 from bootcamp.tasks.models import Task
+from bootcamp.inventories.models import Inventory
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from bootcamp.decorators import ajax_required
 import markdown,json
 from django.template.loader import render_to_string
-import requests
+import requests, json
 
 
 def _results(request, results):
@@ -40,26 +41,90 @@ def result(request, slug):
     result = get_object_or_404(Result, slug=slug, status=Result.ACTIVE)
     return render(request, 'results/result.html', {'result': result})
 
-@login_required
-def cmapp(request):
-    # result = get_object_or_404(Result, slug=slug, status=Result.ACTIVE)
-    return render(request, 'results/cmapp.html', {'result': result})
+# @login_required
+# def cmapp(request):
+#     # result = get_object_or_404(Result, slug=slug, status=Result.ACTIVE)
+#     return render(request, 'results/cmapp.html', {'result': result})
 
-
-def testpost(request):
-    result=''
-    if request.method == 'GET':
-        result = request.POST.get('result')
+@login_required()
+def runresult(request):
+    resultid=''
+    if request.method == 'POST':
+        resultid = request.POST.get('result')
         test = request.POST.get('test')
-    url = 'http://200.12.221.13:5555/cmapp/api/v1.0/routerlist'
+
+    result = get_object_or_404(Result, pk=resultid)
+    playbook = result.playbook
+    inventory = result.inventory
+    emcpath= '/etc/emcansibout'
+    mtnpath= '/etc/mtnansibout'
+    if result.factstatus == "true":
+        fact = result.factfile
+    else:
+        fact = "nofile"
+
+    url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/runplaybook'
     headers = {'content-type': 'application/json'}
-    data='{"title":"temp"}'
+    data='{"playbook":"cisco_demo.yml" , "inventory":"dev","resultid":"1000","fact":"factshare.txt"}'
 #    data = '{"query":{"bool":{"must":[{"text":{"record.document":"SOME_JOURNAL"}},{"text":{"record.articleTitle":"farmers"}}],"must_not":[],"should":[]}},"from":0,"size":50,"sort":[],"facets":{}}'
     response = requests.post(url, data=data, headers=headers, auth=('netbot','N#tB@t'))
+    stdoutfilename = "stdout"+str(result.id)+".out"
+    if result.network == 'EMC':
+        stdoutpath = emcpath
+    else:
+        stdoutpath = mtnpath
+    stdoutfile = stdoutpath+"/"+stdoutfilename
+
+    ####update value in model (equivalent to update query)
+    updateresult = Result.objects.filter(pk = resultid).update(outputfile = stdoutfile)
+    # updateresult = get_object_or_404(Result, pk=resultid)
+    # updateresult.outputfile = stdoutfile
+    # updateresult.save()
+    target = open(stdoutfile, 'w')
+    target.write(response.text)
+
+    fileRead = open(stdoutfile)
+    Output = fileRead.read()
+    Output=Output.replace("[0;32m","")
+    Output=Output.replace("[0;31m","")
+    Output=Output.replace("[0m"," ")
+    Output=Output.replace("\x1b"," ")
+
     data = {}
     data['something'] = response
     return HttpResponse(response.text, content_type = "application/json")
     # return render(request, 'results/result.html', {'result': response.text})
+
+@login_required()
+def getresultout(request, id):
+    return render(request, 'results/outputfile.html', {'result':id})
+
+@login_required()
+def resultoutput(request):
+    resultid=''
+    # if request.method == 'post':
+    #     resultid = request.POST.get('result')
+    #     test = request.POST.get('test')
+
+    result = get_object_or_404(Result, pk=34)
+
+    emcpath= '/etc/emcansibout/'
+    mtnpath= '/etc/mtnansibout/'
+
+
+
+    # url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/runplaybook'
+    # headers = {'content-type': 'application/json'}
+    # data='{"playbook":"cisco_demo.yml" , "inventory":"dev","resultid":"1000"}'
+#    data = '{"query":{"bool":{"must":[{"text":{"record.document":"SOME_JOURNAL"}},{"text":{"record.articleTitle":"farmers"}}],"must_not":[],"should":[]}},"from":0,"size":50,"sort":[],"facets":{}}'
+#     response = requests.post(url, data=data, headers=headers, auth=('netbot','N#tB@t'))
+
+    stdoutfile = result.outputfile
+    fileRead = open(stdoutfile)
+    Output = fileRead.read()
+
+    return HttpResponse(Output, content_type = "application/json")
+    # return render(request, 'results/test.html', {'result': stdoutfile})
 
 
 @login_required()
@@ -75,28 +140,65 @@ def resultdetails(request, id):
 def createresult(request):
     if request.method == 'POST':
         result = Result()
+        inventory = request.POST.get('inventory')
+        # inventory = get_object_or_404(Inventory, pk=inventoryid)
+        result.inventory = inventory
         result.create_user = request.user
-        result.inventory = request.POST.get('inventory')
         taskid = request.POST.get('taskid')
         status = request.POST.get('status')
         if status in [Result.ACTIVE, Result.DELETED]:
             result.status = request.POST.get('status')
 
-        if not request.POST.get('factfile'):
-            result.factfile = request.POST.get('factfile')
+        # if not request.POST.get('factfile'):
+        result.factfile = request.POST.get('factfile')
+
 
         task = get_object_or_404(Task, pk=taskid)
 
+        result.task = task
         result.name = task.name
         result.description = task.description
         result.network = task.network
         result.playbook = task.playbook
         result.credential = task.credential
-        # result.save()
+        result.factstatus = task.factstatus
+
+        result.save()
+
         # tags = form.cleaned_data.get('tags')
         # task.create_tags(tags)
         # return redirect('/results/')
-    return render(request, 'results/playoutput.html', {'result':159, 'taskid':taskid, 'status':status})
+    return render(request, 'results/playoutput.html', {'result':result.id})
+
+@login_required
+def rerunresult(request):
+    if request.method == 'POST':
+        resultid = request.POST.get('resultid')
+        oldresult = get_object_or_404(Result, pk=resultid)
+
+        result = Result()
+        result.create_user = request.user
+        result.inventory = oldresult.inventory
+
+        # if not request.POST.get('factfile'):
+        #     result.factfile = request.POST.get('factfile')
+
+        # task = get_object_or_404(Task, pk=taskid)
+
+        result.task = oldresult.task
+        result.factfile = oldresult.factfile
+        result.name = oldresult.name
+        result.description = oldresult.description
+        result.network = oldresult.network
+        result.playbook = oldresult.playbook
+        result.credential = oldresult.credential
+
+        result.save()
+
+        # tags = form.cleaned_data.get('tags')
+        # task.create_tags(tags)
+        # return redirect('/results/')
+    return render(request, 'results/playoutput.html', {'result':result.id})
 
 
 # @login_required

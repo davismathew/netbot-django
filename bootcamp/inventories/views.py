@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from bootcamp.decorators import ajax_required
 import markdown
 from django.template.loader import render_to_string
+import requests, json
 
 
 def _inventories(request, inventories):
@@ -56,6 +57,17 @@ def createinventory(request):
             if status in [Inventory.ACTIVE, Inventory.DELETED]:
                 inventory.status = form.cleaned_data.get('status')
             inventory.save()
+
+            url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
+            headers = {'content-type': 'application/json'}
+            data= {}
+            data['variable']="10.10.10.102"
+            data['inventory']=inventory.name
+
+            # data='{"variable":"10.10.10.102"}'
+#    data = '{"query":{"bool":{"must":[{"text":{"record.document":"SOME_JOURNAL"}},{"text":{"record.articleTitle":"farmers"}}],"must_not":[],"should":[]}},"from":0,"size":50,"sort":[],"facets":{}}'
+            response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+
             # tags = form.cleaned_data.get('tags')
             # task.create_tags(tags)
             return redirect('/inventories/')
@@ -80,8 +92,18 @@ def edit(request, id):
     if request.POST:
         form = InventoryForm(request.POST, instance=inventory,initial={'inventory':inventory.pk})
         # form.fields['inventory'].queryset =
+        invinstance = get_object_or_404(Inventory, pk=id)
         if form.is_valid():
             form.save()
+            url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
+            headers = {'content-type': 'application/json'}
+            data= {}
+            data['variable']="10.10.10.102"
+            data['inventory']=invinstance.name
+            # data='{"variable":"10.10.10.102","inventory":invinstance}'
+#    data = '{"query":{"bool":{"must":[{"text":{"record.document":"SOME_JOURNAL"}},{"text":{"record.articleTitle":"farmers"}}],"must_not":[],"should":[]}},"from":0,"size":50,"sort":[],"facets":{}}'
+            response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+
             return redirect('/inventories/')
     else:
         form = InventoryForm(instance=inventory, initial={'tags': tags})

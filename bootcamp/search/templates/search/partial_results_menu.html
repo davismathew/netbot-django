@@ -1,21 +1,17 @@
 {% load i18n %}
 
 <div class="list-group">
-  <a href="{% url 'search' %}?q={{ querystring }}&type=task" class="list-group-item{% if active == 'task' %} active{% endif %}">
+  <a href="{% url 'search' %}?q={{ querystring }}&type=tasks" class="list-group-item{% if active == 'task' %} active{% endif %}">
     <span>{% trans 'Task' %}</span>
     <span class="badge">{{ count.tasks }}</span>
   </a>
-  <a href="{% url 'search' %}?q={{ querystring }}&type=feed" class="list-group-item{% if active == 'feed' %} active{% endif %}">
-    <span>{% trans 'Feed' %}</span>
-    <span class="badge">{{ count.feed }}</span>
+  <a href="{% url 'search' %}?q={{ querystring }}&type=inventories" class="list-group-item{% if active == 'inventory' %} active{% endif %}">
+    <span>{% trans 'Inventory' %}</span>
+    <span class="badge">{{ count.inventories }}</span>
   </a>
-  <a href="{% url 'search' %}?q={{ querystring }}&type=articles" class="list-group-item{% if active == 'articles' %} active{% endif %}">
-    <span>{% trans 'Articles' %}</span>
-    <span class="badge">{{ count.articles }}</span>
-  </a>
-  <a href="{% url 'search' %}?q={{ querystring }}&type=questions" class="list-group-item{% if active == 'questions' %} active{% endif %}">
-    <span>{% trans 'Questions' %}</span>
-    <span class="badge">{{ count.questions }}</span>
+  <a href="{% url 'search' %}?q={{ querystring }}&type=results" class="list-group-item{% if active == 'result' %} active{% endif %}">
+    <span>{% trans 'Results' %}</span>
+    <span class="badge">{{ count.results }}</span>
   </a>
   <a href="{% url 'search' %}?q={{ querystring }}&type=users" class="list-group-item{% if active == 'users' %} active{% endif %}">
     <span>{% trans 'Users' %}</span>
