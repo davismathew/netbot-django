@@ -1,10 +1,15 @@
-<html>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
- 
-    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
-    
+{% block title %} {% trans 'Articles' %} {% endblock %}
+
+{% block head %}
+  <link href="{% static 'css/articles.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block main %}
+
     <style>
 
 div#spinner
@@ -69,7 +74,7 @@ table.hovertable td {
   padding: 10px 20px;
   font-size: 24px;
   cursor: pointer;
-  text-align: center;	
+  text-align: center;
   text-decoration: none;
   outline: none;
   color: red;
@@ -93,16 +98,16 @@ table.hovertable td {
 }
 
 </style>
-    
-   
+
+
 
 <script>
-    
+
     $(document).ready(function() {
-        
+
         $('#mytable').on('click', '.removeButton', function(events){
-                    var ICID = $(this).closest('tr').find('td').eq(0).html(); 
-                    var city = $(this).closest('tr').find('td').eq(1).html(); 
+                    var ICID = $(this).closest('tr').find('td').eq(0).html();
+                    var city = $(this).closest('tr').find('td').eq(1).html();
                     var identity=$(this).closest('tr').find('td').eq(3).html();
                     var tr=$(this).closest('tr');
                     if(identity == "NS")
@@ -121,8 +126,8 @@ table.hovertable td {
                                       });
                       }
                     else
-                      { 
-    
+                      {
+
                            $.ajax({
                                      type: "DELETE",
                                      url: "http://10.200.96.103:5000/delCCSRecord",
@@ -131,61 +136,61 @@ table.hovertable td {
                                                   tr.remove();
                                       },
 		                    error:function(xhr, status, error) {
-                                  
+
                                            alert(xhr.status);
                                            alert(status);
                                      }
-		     
+
                                   });
-    
+
                         }
             });
-  
-  
+
+
         $('.testAllButton').on('click', function(events){
                 var data = "";
                $("table tr").each(function(i, v){
 		      $(this).children('td').each(function(ii, vv){
                                  data+= $(this).text()+",";
-                         }); 
+                         });
 	                data+="*";
                  });
-	       
+
                 $.ajax({
                             type: "POST",
                             url: "http://10.200.96.103:5000/allRowPingTest",
                             data: { value : data }, // post values
                             success:function(result){
 				       $('#AllResult').text(result.value);
-				       
+
                              },
 		             error:function(xhr, status, error) {
-                                 
+
                                      alert(xhr.status);
                                      alert(status);
                             }
                   });
-    
+
        });
-  
-  
+
+
        $('#mytable').on('click', '.delete', function(events){
-     
+
                 var tr=$(this).closest('tr');
                 tr.remove();
-    
+
         });
 
        $('#mytable').on('click', '.testButton', function(events){
-   
-             
-             var cAEnd = $(this).closest('tr').find('td').eq(4).html(); 
-             var cAEndInt = $(this).closest('tr').find('td').eq(5).html(); 
+
+
+             var cAEnd = $(this).closest('tr').find('td').eq(4).html();
+             var cAEndInt = $(this).closest('tr').find('td').eq(5).html();
              var cAEndIP=$(this).closest('tr').find('td').eq(6).html();
 	     var cat=$(this).closest('tr').find('td').eq(7).html();
-    
-             var cZEnd = $(this).closest('tr').find('td').eq(8).html(); 
-             var cZEndInt = $(this).closest('tr').find('td').eq(9).html(); 
+
+             var cZEnd = $(this).closest('tr').find('td').eq(8).html();
+             var cZEndInt = $(this).closest('tr').find('td').eq(9).html();
              var cZEndIP=$(this).closest('tr').find('td').eq(10).html();
 	     var czt=$(this).closest('tr').find('td').eq(11).html();
              var tr=$(this).closest('tr');
@@ -196,28 +201,28 @@ table.hovertable td {
                       success:function(result){
 				   str="<tr><td colspan=\"14\" bgcolor=\"white\">"+result.value+"  <button class=\"delete\">Remove</button></td></tr>";
 				   tr.after(str);
-				   
+
                         },
 		     error:function(xhr, status, error) {
-                                 
+
                                   alert(xhr.status);
                                   alert(status);
                       }
               });
-    
-    
-      });
-  
 
-  
+
+      });
+
+
+
 });
 
-  function displayDetails(tableName) {    
-  
+  function displayDetails(tableName) {
+
                      if(tableName == "CS")
                        {
-		          
-		         
+
+
 		          $.ajax({
                                           type: "POST",
                                           url: "http://10.200.96.103:5000/coreCircuitDetails",
@@ -227,7 +232,7 @@ table.hovertable td {
                                          xhrFields: {
                                          //withCredentials: false
                                            },
-                                          
+
                                           success:function(result) {
 					      if(result.check == "False")
 					      {
@@ -238,63 +243,63 @@ table.hovertable td {
 						           var array=result.value;
 							   var head="yes";
 							   var htmlTags="";
-							  
+
 							    $.each(array,function(index,listvalue) {
 							            htmlTags+=" <tr onmouseover\this.style.backgroundColor=\'#ffff66\';\" onmouseout=\"this.style.backgroundColor=\'#d4e3e5\';\">";
 							           if(head == "yes") {
 								                $.each(listvalue,function(index,value) {
 							                             htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">"+value+"</th>";
-							      
+
 							                        });
 									        htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">Operation </th>";
-								    
+
 								    } else {
 
                                                                                  $.each(listvalue,function(index,value) {
-										 
+
 							                             htmlTags+="<td style=\"overflow: hidden;\" class=\"theCell\">"+value+"</td>";
-							      
-							                           });	
+
+							                           });
 										    htmlTags+="<td><button type=\"submit\" class=\"btn testButton\">Test</button></td>";
-								                    
-								    
+
+
 								      }
 								      htmlTags+="</tr>";
 								      head="no";
-							      
+
 							 });
-							 
+
 						   $("#mytable").append(htmlTags);
 						   $('#TestAll').show();
-					              
-					              
+
+
 					      }
-					      
+
                                             } ,
 		                       error:function(xhr, status, error) {
 		                                    alert(xhr.status);
                                                     alert(status);
                                            }
-		     
-					    
+
+
                                       });
-                                
+
                       }
 		      else if(tableName == "CSS")
 		      {
-                          
+
                             $.ajax({
                                           type: "POST",
                                           url: "http://10.200.96.103:5000/coreCircuitStates",
-                                          
+
                                           success:function(result){
-					      
+
                                                     if(result.check == "False")
 					             {
 					                 $('#No').text("No Data Found");
 					              }
 					              else {
-						      
+
 						           $('#mytable').empty();
 						           var array=result.value;
 							   var head="yes";
@@ -304,41 +309,41 @@ table.hovertable td {
 							           if(head == "yes") {
 								                $.each(listvalue,function(index,value) {
 							                             htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">"+value+"</th>";
-							      
+
 							                        });
 									        htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">Operation </th>";
-								    
+
 								    } else {
 
                                                                                  $.each(listvalue,function(index,value) {
-										 
+
 							                             htmlTags+="<td style=\"overflow: hidden;\" class=\"theCell\">"+value+"</td>";
-							      
-							                           });								    
+
+							                           });
 								                    htmlTags+="<td style=\"display:none;\">CS</td>"
                                                                                     htmlTags+="<td><button type=\"submit\" class=\"btn removeButton delete\">Remove</button></td>";
-								    
+
 								      }
 								      htmlTags+="</tr>";
 								      head="no";
-							      
+
 							 });
-							 
+
 							 $("#mytable").append(htmlTags);
 							 $('#TestAll').hide();
 
-						            
-					             }   
+
+					             }
                                             },
 			                  error:function(xhr, status, error) {
                                                     alert(xhr.status);
                                                     alert(status);
                                            }
-                                      });		       
-		      } 
+                                      });
+		      }
 		      else if(tableName == "NS")
 		      {
-		      
+
 		               $.ajax({
                                           type: "POST",
                                           url: "http://10.200.96.103:5000/orionNodeStates",
@@ -357,42 +362,42 @@ table.hovertable td {
 							        if(head == "yes") {
 								              $.each(listvalue,function(index,value) {
 							                           htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">"+value+"</th>";
-							      
+
 							                      });
 									       htmlTags+="<th style=\"overflow: hidden;\" class=\"theCell\">Operation </th>";
-								    
+
 								      } else {
 
                                                                                  $.each(listvalue,function(index,value) {
-										 
+
 							                             htmlTags+="<td style=\"overflow: hidden;\" class=\"theCell\">"+value+"</td>";
-							      
-							                           });								    
+
+							                           });
 								                    htmlTags+="<td style=\"display:none;\">NS</td>"
                                                                                     htmlTags+="<td><button type=\"submit\" class=\"btn removeButton delete\">Remove</button></td>";
-								    
+
 								      }
 								      htmlTags+="</tr>";
 								      head="no";
-							      
+
 							 });
-							 
+
 							 $("#mytable").append(htmlTags);
 							 $('#TestAll').hide();
-					      
-					           }                                                   
-                                                        
+
+					           }
+
                                             },
 			                  error:function(xhr, status, error) {
                                                     alert(xhr.status);
                                                     alert(status);
                                            }
                                       });
-                             
-		       
-		      } 
-		      
-  
+
+
+		      }
+
+
           }
 
 
@@ -430,6 +435,6 @@ table.hovertable td {
   </div>
 </nav>
 
-</html>
+{% endblock main %}
 
 
