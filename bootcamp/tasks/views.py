@@ -8,11 +8,12 @@ from django.contrib.auth.decorators import login_required
 from bootcamp.decorators import ajax_required
 import markdown
 from django.template.loader import render_to_string
-
+from bootcamp.utils.loadconfig import get_path
 
 def _tasks(request, tasks):
     paginator = Paginator(tasks, 10)
-    baseurl="http://127.0.0.1:8000"
+    # baseurl="http://127.0.0.1:8000"
+    baseurl = get_path('baseurl')
     page = request.GET.get('page')
     try:
         tasks = paginator.page(page)
@@ -96,6 +97,16 @@ def runtask(request, id):
     emcinventory = Inventory.objects.filter(network="EMC")
     mtninventory = Inventory.objects.filter(network="MTN")
     return render(request, 'tasks/task.html', {'task':task, 'emcinventory':emcinventory, 'mtninventory':mtninventory})
+
+@login_required()
+def listplays(request):
+    temp=['new','another']
+    Output={'value':temp}
+    # Output
+
+    return HttpResponse(Output, content_type = "application/json")
+    # return render(request, 'results/test.html', {'result': stdoutfile})
+
 
 
 # @login_required

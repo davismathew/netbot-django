@@ -8,11 +8,13 @@ from bootcamp.decorators import ajax_required
 import markdown
 from django.template.loader import render_to_string
 import requests, json
+from bootcamp.utils.loadconfig import get_path
 
 
 def _inventories(request, inventories):
     paginator = Paginator(inventories, 10)
-    baseurl="http://127.0.0.1:8000"
+    # baseurl="http://127.0.0.1:8000"
+    baseurl = get_path('baseurl')
     page = request.GET.get('page')
     try:
         inventories = paginator.page(page)

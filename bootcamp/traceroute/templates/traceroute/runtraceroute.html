@@ -22,13 +22,14 @@
 $(document).ready(function() {
 
     var ip=$('#ip').val();
+    var baseurl=$('#baseurl').val();
     <!--var inventory=2;-->
     <!--var playbookName='cisco_xe.yml';-->
     <!--alert(playbookName);-->
-    $('#progress').show();
+    $('#progress').show();s
     $.ajax({
                      type: "GET",
-                     url: "http://127.0.0.1:8000/traceroute/runtraceroute/",
+                     url: baseurl+"/traceroute/runtraceroute/",
                      <!--data: { ip : ip },-->
 
                    success:function(result){
@@ -59,6 +60,7 @@ $(document).ready(function() {
 
        <!--  <div class="jumbotron"> -->
        <input hidden type="text" name="ip" id="ip" value="{{ ip }}"><br/><br/>
+       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
 
 
        <center>

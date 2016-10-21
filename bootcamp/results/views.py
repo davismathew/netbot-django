@@ -9,11 +9,13 @@ from bootcamp.decorators import ajax_required
 import markdown,json
 from django.template.loader import render_to_string
 import requests, json
+from bootcamp.utils.loadconfig import get_path
 
 
 def _results(request, results):
     paginator = Paginator(results, 10)
-    baseurl="http://127.0.0.1:8000"
+    # baseurl="http://127.0.0.1:8000"
+    baseurl = get_path('baseurl')
     page = request.GET.get('page')
     try:
         results = paginator.page(page)
@@ -97,7 +99,8 @@ def runresult(request):
 
 @login_required()
 def getresultout(request, id):
-    return render(request, 'results/outputfile.html', {'result':id})
+    baseurl = get_path('baseurl')
+    return render(request, 'results/outputfile.html', {'result':id,'baseurl':baseurl})
 
 @login_required()
 def resultoutput(request):
@@ -138,6 +141,7 @@ def resultdetails(request, id):
 
 @login_required
 def createresult(request):
+    baseurl = get_path('baseurl')
     if request.method == 'POST':
         result = Result()
         inventory = request.POST.get('inventory')
@@ -168,10 +172,11 @@ def createresult(request):
         # tags = form.cleaned_data.get('tags')
         # task.create_tags(tags)
         # return redirect('/results/')
-    return render(request, 'results/playoutput.html', {'result':result.id})
+    return render(request, 'results/playoutput.html', {'result':result.id,'baseurl':baseurl})
 
 @login_required
 def rerunresult(request):
+    baseurl = get_path('baseurl')
     if request.method == 'POST':
         resultid = request.POST.get('resultid')
         oldresult = get_object_or_404(Result, pk=resultid)
@@ -198,7 +203,7 @@ def rerunresult(request):
         # tags = form.cleaned_data.get('tags')
         # task.create_tags(tags)
         # return redirect('/results/')
-    return render(request, 'results/playoutput.html', {'result':result.id})
+    return render(request, 'results/playoutput.html', {'result':result.id,'baseurl':baseurl})
 
 
 # @login_required

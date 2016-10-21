@@ -8,7 +8,7 @@ from bootcamp.results.models import Result
 from bootcamp.articles.models import Article
 from bootcamp.questions.models import Question
 from django.contrib.auth.decorators import login_required
-
+from bootcamp.utils.loadconfig import get_path
 
 @login_required
 def search(request):
@@ -49,7 +49,8 @@ def search(request):
         count['articles'] = results['articles'].count()
         count['questions'] = results['questions'].count()
         count['users'] = results['users'].count()
-        baseurl = "http://127.0.0.1:8000"
+        # baseurl = "http://127.0.0.1:8000"
+        baseurl = get_path('baseurl')
 
         return render(request, 'search/results.html', {
             'hide_search': True,
