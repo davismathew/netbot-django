@@ -23,5 +23,5 @@ class ResultForm(forms.ModelForm):
         help_text='Use spaces to separate the tags, such as "interfaces emc automation"')
 
     class Meta:
-        model = Inventory
+        model = Result
         fields = ['name', 'description', 'tags', 'status', 'network', 'variable']

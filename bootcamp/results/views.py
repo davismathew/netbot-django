@@ -60,16 +60,31 @@ def runresult(request):
     inventory = result.inventory
     emcpath= '/etc/emcansibout'
     mtnpath= '/etc/mtnansibout'
-    if result.factstatus == "true":
-        fact = result.factfile
-    else:
-        fact = "nofile"
-
-    url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/runplaybook'
+    fact='nofile'
     headers = {'content-type': 'application/json'}
-    data='{"playbook":"cisco_demo.yml" , "inventory":"dev","resultid":"1000","fact":"factshare.txt"}'
-#    data = '{"query":{"bool":{"must":[{"text":{"record.document":"SOME_JOURNAL"}},{"text":{"record.articleTitle":"farmers"}}],"must_not":[],"should":[]}},"from":0,"size":50,"sort":[],"facets":{}}'
-    response = requests.post(url, data=data, headers=headers, auth=('netbot','N#tB@t'))
+
+    if result.factstatus:
+        if result.network == 'EMC':
+            facturl = 'http://200.12.221.13:5555/ansibengine/api/v1.0/sharefact'
+        else:
+            facturl = 'http://10.200.96.164:5555/ansibengine/api/v1.0/sharefact'
+        fact = result.factfile
+        factdata={}
+        factdata["fact"] = fact
+        factresponse = requests.post(facturl, data=json.dumps(factdata), headers=headers, auth=('netbot','N#tB@t'))
+
+    if result.network == 'EMC':
+        url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/runplaybook'
+    else:
+        url = 'http://10.200.96.164:5555/ansibengine/api/v1.0/runplaybook'
+
+    data={}
+    # data='{"playbook":"cisco_demo.yml" , "inventory":"dev","resultid":"1000","fact":"factshare.txt"}'
+    data["playbook"] = playbook
+    data["inventory"] = inventory
+    data["resultid"] = resultid
+    data["fact"] = fact
+    response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
     stdoutfilename = "stdout"+str(result.id)+".out"
     if result.network == 'EMC':
         stdoutpath = emcpath
@@ -92,10 +107,10 @@ def runresult(request):
     Output=Output.replace("[0m"," ")
     Output=Output.replace("\x1b"," ")
 
-    data = {}
-    data['something'] = response
+    # data = {}
+    # data['value'] = "va"
     return HttpResponse(response.text, content_type = "application/json")
-    # return render(request, 'results/result.html', {'result': response.text})
+    # return render(request, 'results/result.html', {'result': response.text,'playbook':playbook,'inventory':inventory,'resultid':resultid})
 
 @login_required()
 def getresultout(request, id):
@@ -155,6 +170,10 @@ def createresult(request):
 
         # if not request.POST.get('factfile'):
         result.factfile = request.POST.get('factfile')
+        if request.POST.get('factfile') is not None or request.POST.get('factfile') != '':
+            result.factfile = request.POST.get('factfile')
+        else:
+            result.factfile="nofile"
 
 
         task = get_object_or_404(Task, pk=taskid)
@@ -197,6 +216,7 @@ def rerunresult(request):
         result.network = oldresult.network
         result.playbook = oldresult.playbook
         result.credential = oldresult.credential
+        result.factstatus = oldresult.factstatus
 
         result.save()
 
