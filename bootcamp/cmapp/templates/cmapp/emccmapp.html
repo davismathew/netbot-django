@@ -109,12 +109,12 @@ table.hovertable td {
         $('#mytable').on('click', '.removeButton', function(events){
                     var ICID = $(this).closest('tr').find('td').eq(0).html();
                     var city = $(this).closest('tr').find('td').eq(1).html();
-                    var identity=$(this).closest('tr').find('td').eq(3).html();
+                    var identity=$(this).closest('tr').find('td').eq(4).html();
                     var tr=$(this).closest('tr');
                     if(identity == "NS")
                        {
                                 $.ajax({
-                                          type: "DELETE",
+                                          type: "POST",
                                           url: "http://200.12.221.43:5000/delONSRecord",
 				          data: { nodeName : ICID, city : city }, // post values
                                           success:function(result){
@@ -130,7 +130,7 @@ table.hovertable td {
                       {
 
                            $.ajax({
-                                     type: "DELETE",
+                                     type: "POST",
                                      url: "http://200.12.221.43:5000/delCCSRecord",
                                      data: { icd : ICID }, // post values
                                      success:function(result){
@@ -188,17 +188,17 @@ table.hovertable td {
              var cAEnd = $(this).closest('tr').find('td').eq(4).html();
              var cAEndInt = $(this).closest('tr').find('td').eq(5).html();
              var cAEndIP=$(this).closest('tr').find('td').eq(6).html();
-	     var cat=$(this).closest('tr').find('td').eq(7).html();
 
-             var cZEnd = $(this).closest('tr').find('td').eq(8).html();
-             var cZEndInt = $(this).closest('tr').find('td').eq(9).html();
-             var cZEndIP=$(this).closest('tr').find('td').eq(10).html();
-	     var czt=$(this).closest('tr').find('td').eq(11).html();
+
+             var cZEnd = $(this).closest('tr').find('td').eq(7).html();
+             var cZEndInt = $(this).closest('tr').find('td').eq(8).html();
+             var cZEndIP=$(this).closest('tr').find('td').eq(9).html();
+
              var tr=$(this).closest('tr');
              $.ajax({
                       type: "POST",
                       url: "http://200.12.221.43:5000/rowPingTest",
-                      data: { ca : cAEnd, cai : cAEndInt, caa:cAEndIP, cat:cat, cz:cZEnd, czi:cZEndInt, cza:cZEndIP, czt:czt}, // post values
+                      data: { ca : cAEnd, cai : cAEndInt, caa:cAEndIP, cz:cZEnd, czi:cZEndInt, cza:cZEndIP}, // post values
                       success:function(result){
 				   str="<tr><td colspan=\"14\" bgcolor=\"white\">"+result.value+"  <button class=\"delete\">Remove</button></td></tr>";
 				   tr.after(str);

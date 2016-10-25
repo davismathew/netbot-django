@@ -108,12 +108,12 @@ table.hovertable td {
         $('#mytable').on('click', '.removeButton', function(events){
                     var ICID = $(this).closest('tr').find('td').eq(0).html();
                     var city = $(this).closest('tr').find('td').eq(1).html();
-                    var identity=$(this).closest('tr').find('td').eq(3).html();
+                    var identity=$(this).closest('tr').find('td').eq(4).html();
                     var tr=$(this).closest('tr');
                     if(identity == "NS")
                        {
                                 $.ajax({
-                                          type: "DELETE",
+                                          type: "POST",
                                           url: "http://10.200.96.103:5000/delONSRecord",
 				          data: { nodeName : ICID, city : city }, // post values
                                           success:function(result){
@@ -129,7 +129,7 @@ table.hovertable td {
                       {
 
                            $.ajax({
-                                     type: "DELETE",
+                                     type: "POST",
                                      url: "http://10.200.96.103:5000/delCCSRecord",
                                      data: { icd : ICID }, // post values
                                      success:function(result){
