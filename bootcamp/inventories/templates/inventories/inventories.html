@@ -23,7 +23,7 @@
                 <th class="col-xs-2.5"><strong>Name</strong></th>
                 <th class="col-xs-2.5"><strong>Description</strong></th>
                 <th class="col-xs-2.5"><strong>Variable</strong></th>
-                <th class="col-xs-2.5"><strong>Action</strong></th>
+                <th class="col-xs-2.5"><strong>Network</strong></th>
             </tr>
         </thead>
           <tbody>
@@ -31,15 +31,10 @@
             <tr>
                 <td class="col-xs-1">  {{ inventory.id }}
 </td>
-                <td class="col-xs-2.5"><a href="{% url 'inventories' %}">{{ inventory.name }}</a></td>
+                <td class="col-xs-2.5"><a href="{{ baseurl }}/inventories/edit/{{ inventory.id }}">{{ inventory.name }}</a></td>
                 <td class="col-xs-2.5">{{ inventory.description }}</td>
                 <td class="col-xs-2.5">{{ inventory.variable }}</td>
-                <td class="col-xs-2.5">
-                    <a href="{{ baseurl }}/tasks/inventorydetails/{{ task.id }}">
-                        <span style="font-size:1.5em;" class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
-                            </a>
-                        Run Task &nbsp;&nbsp;
-
+                <td class="col-xs-2.5">{{ inventory.network }}
                 </td>
             </tr>
             {% empty %}
