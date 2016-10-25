@@ -28,9 +28,9 @@ $(document).ready(function() {
     <!--alert(playbookName);-->
     $('#progress').show();
     $.ajax({
-                     type: "GET",
-                     url: baseurl+"/traceroute/runtraceroute/",
-                     <!--data: { ip : ip },-->
+                     type: "POST",
+                     url: "/traceroute/runtraceroute/",
+                     data: { baseurl : baseurl },
 
                    success:function(result){
                                   <!--alert(result);-->

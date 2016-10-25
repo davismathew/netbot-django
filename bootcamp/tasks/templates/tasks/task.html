@@ -7,6 +7,15 @@
 {% block head %}
   <link href="{% static 'css/articles.css' %}" rel="stylesheet">
   <script src="{% static 'js/articles.js' %}"></script>
+<script>
+function validateForm() {
+    var x = document.forms["runtask"]["factfile"].value;
+    if (x == null || x == "") {
+        alert("Factfile must be filled out");
+        return false;
+    }
+}
+</script>
 {% endblock head %}
 
 {% block main %}
