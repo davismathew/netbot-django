@@ -84,12 +84,16 @@ button {
             <div><label for="vrf">Use vrf name:</label>
     <input type="checkbox" id="vrf" name="vrf" value="True" checked=""/></div>
             <div><label for="vrfdropdown">VRF Names:</label>
-
                 <select name="vrfname" id="vrfdropdown">
             {% for vrf in emcvrf %}
                 <option value={{ vrf }}>{{ vrf }}</option>
             {% endfor %}
                 </select></div>
+    <div>
+  <input type="radio" name="network" value="emc" checked> EMC<br>
+  <input type="radio" name="network" value="mtn"> MTN<br>
+</div>
+
     <div class="button">
         <button type="submit">Traceroute</button>
     </div>

@@ -36,10 +36,18 @@ def gettraceroute(request):
     sourceip = request.POST.get('sourceip')
     destip = request.POST.get('destip')
     vrf = request.POST.get('vrf')
+    network = request.POST.get('network')
     vrfname = request.POST.get('vrfdropdown')
+    baseurl = 'http://200.12.221.13:5555'
+
+    if network.lower() == 'EMC'.lower():
+        baseurl = 'http://200.12.221.13:5555'
+    else:
+        baseurl = 'http://10.200.96.164:5555'
+    url = baseurl+'/ansibengine/api/v1.0/gettraceroute'
+    headers = {'content-type': 'application/json'}
+
     if vrf is True:
-        url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/gettraceroute'
-        headers = {'content-type': 'application/json'}
         data= {}
         data['sourceip']=sourceip
         data['destip']=destip
@@ -48,8 +56,6 @@ def gettraceroute(request):
 
         response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
     else:
-        url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/gettraceroute'
-        headers = {'content-type': 'application/json'}
         data= {}
         data['sourceip']=sourceip
         data['destip']=destip
@@ -57,17 +63,20 @@ def gettraceroute(request):
         data['vrfname']=vrfname
 
         response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
-    return render(request, 'traceroute/runtraceroute.html', {'task': "task"})
+    return render(request, 'traceroute/runtraceroute.html', {'task': "task",'baseurl':baseurl})
 
 
 def runtraceroute(request):
+    baseurl = 'http://200.12.221.13:5555'
+    if request.method == 'POST':
+        baseurl = request.POST.get('baseurl')
     # if request.method == 'POST':
-    #     resultid = request.POST.get('result')
+    #     baseurl = request.POST.get('baseurl')
 
-    url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/runtraceroute'
+    url = baseurl+'/ansibengine/api/v1.0/runtraceroute'
     headers = {'content-type': 'application/json'}
     data= {}
-    data['ip']=''
+    data['value']=url
 
     response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
 
