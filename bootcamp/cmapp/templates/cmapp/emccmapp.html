@@ -184,7 +184,7 @@ table.hovertable td {
 
        $('#mytable').on('click', '.testButton', function(events){
 
-
+             var pTag=$(this).closest('tr').find('td').eq(0).html();
              var cAEnd = $(this).closest('tr').find('td').eq(4).html();
              var cAEndInt = $(this).closest('tr').find('td').eq(5).html();
              var cAEndIP=$(this).closest('tr').find('td').eq(6).html();
@@ -198,7 +198,7 @@ table.hovertable td {
              $.ajax({
                       type: "POST",
                       url: "http://200.12.221.43:5000/rowPingTest",
-                      data: { ca : cAEnd, cai : cAEndInt, caa:cAEndIP, cz:cZEnd, czi:cZEndInt, cza:cZEndIP}, // post values
+                      data: { pTag:pTag, ca : cAEnd, cai : cAEndInt, caa:cAEndIP, cz:cZEnd, czi:cZEndInt, cza:cZEndIP}, // post values
                       success:function(result){
 				   str="<tr><td colspan=\"14\" bgcolor=\"white\">"+result.value+"  <button class=\"delete\">Remove</button></td></tr>";
 				   tr.after(str);
