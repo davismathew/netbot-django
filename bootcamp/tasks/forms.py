@@ -21,7 +21,7 @@ class TaskForm(forms.ModelForm):
     PLAYBOOKCHOICES=[('cisco_demo.yml','cisco_demo.yml'),('Gather_Interface_StatsnErrors.yml','Gather_Interface_StatsnErrors.yml'),
         ('Verify_Interface_StatsnErrors.yml','Verify_Interface_StatsnErrors.yml'),
         ('Verify_vrf_commands.yml','Verify_vrf_commands.yml'),
-        ('Verify_Routing_stats.yml','Verify_Routing_stats.yml'),
+        ('Verify_Routing_Stats.yml','Verify_Routing_Stats.yml'),
         ('Verify_Duplex_Settings.yml','Verify_Duplex_Settings.yml'),
         ('Gather_Routing_stats.yml','Gather_Routing_stats.yml'),
         ('Gather_Facts_IOS-XE.yml','Gather_Facts_IOS-XE.yml'),
