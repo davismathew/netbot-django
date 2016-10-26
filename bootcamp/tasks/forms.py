@@ -23,7 +23,7 @@ class TaskForm(forms.ModelForm):
         ('Verify_vrf_commands.yml','Verify_vrf_commands.yml'),
         ('Verify_Routing_Stats.yml','Verify_Routing_Stats.yml'),
         ('Verify_Duplex_Settings.yml','Verify_Duplex_Settings.yml'),
-        ('Gather_Routing_stats.yml','Gather_Routing_stats.yml'),
+        ('Gather_Routing_Stats.yml','Gather_Routing_Stats.yml'),
         ('Gather_Facts_IOS-XE.yml','Gather_Facts_IOS-XE.yml'),
         ('Gather_Interface_StatsnErrors.yml','GatherInterface_StatsnErrors.yml'),
         ('tracerouteip.yml','tracerouteip.yml'),
