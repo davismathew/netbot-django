@@ -21,14 +21,14 @@ def traceroute(request):
     return render(request, 'traceroute/traceroute.html', {'task': "task", 'emcvrf':emcvrfname})
 
 @login_required
-def mtntraceroute(request):
+def inttraceroute(request):
     # task = get_object_or_404(Task, status=Task.ACTIVE)
-    mtnvrfname = []
-    with open('/etc/netbot/mtnvrflist.txt') as f:
+    emcvrfname = []
+    with open('/etc/netbot/emcvrflist.txt') as f:
         for line in f:
-            mtnvrfname.append(line)
+            emcvrfname.append(line)
 
-    return render(request, 'traceroute/mtntraceroute.html', {'task': "task", 'mtnvrf':mtnvrfname})
+    return render(request, 'traceroute/inttraceroute.html', {'task': "task", 'emcvrf':emcvrfname})
 
 @login_required()
 def gettraceroute(request):
@@ -65,6 +65,44 @@ def gettraceroute(request):
         response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
     return render(request, 'traceroute/runtraceroute.html', {'task': "task",'baseurl':baseurl})
 
+@login_required()
+def getinterfacetraceroute(request):
+
+    routerip = request.POST.get('sourceip')
+    interfaceip = request.POST.get('sourceint')
+    destip = request.POST.get('destip')
+    vrf = request.POST.get('vrf')
+    network = request.POST.get('network')
+    vrfname = request.POST.get('vrfdropdown')
+    baseurl = 'http://200.12.221.13:5555'
+
+    if network.lower() == 'EMC'.lower():
+        baseurl = 'http://200.12.221.13:5555'
+    else:
+        baseurl = 'http://10.200.96.164:5555'
+    url = baseurl+'/ansibengine/api/v1.0/getinterfacetraceroute'
+    headers = {'content-type': 'application/json'}
+
+    if vrf is True:
+        data= {}
+        data['routerip']=routerip
+        data['interfaceip']=interfaceip
+        data['destip']=destip
+        data['vrf']="True"
+        data['vrfname']=vrfname
+
+        response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+    else:
+        data= {}
+        data['routerip']=routerip
+        data['interfaceip']=interfaceip
+        data['destip']=destip
+        data['vrf']="False"
+        data['vrfname']=vrfname
+
+        response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+    return render(request, 'traceroute/runinterfacetraceroute.html', {'task': "task",'baseurl':baseurl})
+
 
 def runtraceroute(request):
     baseurl = 'http://200.12.221.13:5555'
@@ -74,6 +112,20 @@ def runtraceroute(request):
     #     baseurl = request.POST.get('baseurl')
 
     url = baseurl+'/ansibengine/api/v1.0/runtraceroute'
+    headers = {'content-type': 'application/json'}
+    data= {}
+    data['value']=url
+
+    response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+
+def runinterfacetraceroute(request):
+    baseurl = 'http://200.12.221.13:5555'
+    if request.method == 'POST':
+        baseurl = request.POST.get('baseurl')
+    # if request.method == 'POST':
+    #     baseurl = request.POST.get('baseurl')
+
+    url = baseurl+'/ansibengine/api/v1.0/runinterfacetraceroute'
     headers = {'content-type': 'application/json'}
     data= {}
     data['value']=url

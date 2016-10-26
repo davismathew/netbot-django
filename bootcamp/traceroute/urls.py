@@ -7,9 +7,11 @@ from bootcamp.traceroute import views
 
 urlpatterns = [
     url(r'^$', views.traceroute, name='traceroute'),
-    url(r'^mtn/$', views.mtntraceroute, name='mtntraceroute'),
+    url(r'^inttraceroute$', views.inttraceroute, name='inttraceroute'),
     url(r'^gettrace/$', views.gettraceroute, name='gettrace'),
+    url(r'^getinterfacetrace/$', views.getinterfacetraceroute, name='getinterfacetrace'),
     url(r'^runtraceroute/$', csrf_exempt(views.runtraceroute), name='runtraceroute'),
+    url(r'^runinterfacetraceroute/$', csrf_exempt(views.runinterfacetraceroute), name='runinterfacetraceroute'),
     # url(r'^preview/$', views.preview, name='preview'),
     # url(r'^drafts/$', views.drafts, name='drafts'),
     # url(r'^comment/$', views.comment, name='comment'),

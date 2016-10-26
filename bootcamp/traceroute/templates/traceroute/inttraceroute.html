@@ -11,7 +11,7 @@
 
 {% block main %}
   <ol class="breadcrumb">
-    <li><a href="{% url 'traceroute' %}">{% trans 'Traceroute' %}</a></li>
+    <li><a href="{% url 'inttraceroute' %}">{% trans 'Traceroute' %}</a></li>
   </ol>
 <style type="text/css">
     form {
@@ -69,25 +69,35 @@ button {
 </style>
 
 
-<form action="/gettraceroute" method="POST">
+<form action="/traceroute/getinterfacetrace/" method="POST">
+                      {% csrf_token %}
+
     <div>
-        <label for="sip">Source IP:</label>
-        <input type="text" id="sip" name="source_ip" />
+        <label for="sourceip">Source Router:</label>
+        <input type="text" id="sourceip" name="sourceip" />
     </div>
     <div>
-        <label for="dip">Destination IP:</label>
-        <input type="text" id="dip" name="dest_ip" />
+        <label for="sourceint">Source Interface:</label>
+        <input type="text" id="sourceint" name="sourceint" />
+    </div>
+    <div>
+        <label for="destip">Destination IP:</label>
+        <input type="text" id="destip" name="destip" />
     </div>
 
             <div><label for="vrf">Use vrf name:</label>
-    <input type="checkbox" id="vrf" name="vrf" value="true" checked="checked"/></div>
+    <input type="checkbox" id="vrf" name="vrf" value="True" checked=""/></div>
             <div><label for="vrfdropdown">VRF Names:</label>
-
                 <select name="vrfname" id="vrfdropdown">
-            {% for vrf in mtnvrf %}
+            {% for vrf in emcvrf %}
                 <option value={{ vrf }}>{{ vrf }}</option>
             {% endfor %}
                 </select></div>
+    <div>
+  <input type="radio" name="network" value="emc" checked> EMC<br>
+  <input type="radio" name="network" value="mtn"> MTN<br>
+</div>
+
     <div class="button">
         <button type="submit">Traceroute</button>
     </div>
