@@ -102,7 +102,11 @@ def edit(request, id):
         invinstance = get_object_or_404(Inventory, pk=id)
         if form.is_valid():
             form.save()
-            url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
+            if invinstance.network == 'EMC':
+                url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/runplaybook'
+            else:
+                url = 'http://10.200.96.164:5555/ansibengine/api/v1.0/runplaybook'
+            # url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             headers = {'content-type': 'application/json'}
             data= {}
             data['variable']="10.10.10.102"
