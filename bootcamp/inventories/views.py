@@ -61,9 +61,9 @@ def createinventory(request):
                 inventory.status = form.cleaned_data.get('status')
             inventory.save()
             if inventory.network == 'EMC':
-                url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/runplaybook'
+                url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             else:
-                url = 'http://10.200.96.164:5555/ansibengine/api/v1.0/runplaybook'
+                url = 'http://10.200.96.164:5555/ansibengine/api/v1.0/altinventory'
 
             # url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             headers = {'content-type': 'application/json'}
@@ -103,9 +103,9 @@ def edit(request, id):
         if form.is_valid():
             form.save()
             if invinstance.network == 'EMC':
-                url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/runplaybook'
+                url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             else:
-                url = 'http://10.200.96.164:5555/ansibengine/api/v1.0/runplaybook'
+                url = 'http://10.200.96.164:5555/ansibengine/api/v1.0/altinventory'
             # url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             headers = {'content-type': 'application/json'}
             data= {}
