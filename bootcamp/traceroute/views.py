@@ -114,9 +114,11 @@ def runtraceroute(request):
     url = baseurl+'/ansibengine/api/v1.0/runtraceroute'
     headers = {'content-type': 'application/json'}
     data= {}
-    data['value']=url
+    data['value']="some"
+    data['ipath']='new value'
 
     response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+    return HttpResponse(response.text, content_type = "application/json")
 
 def runinterfacetraceroute(request):
     baseurl = 'http://200.12.221.13:5555'

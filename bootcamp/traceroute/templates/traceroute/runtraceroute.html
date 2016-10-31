@@ -38,6 +38,10 @@ $(document).ready(function() {
                                   $('#downloadlink').show();
                                   $('#progress').hide();
                                   $('#AllResult').text(result.value);
+                                    $('#node').on('click',function(){
+                                  $('#AllResult').text(result.value);});
+                                    $('#nodeip').on('click',function(){
+                                  $('#AllResult').text(result.ipath);});
                         },
                    error:function(xhr, status, error) {
                                   $('#AllResult').show();
@@ -65,11 +69,13 @@ $(document).ready(function() {
 
        <center>
        </center>
+        <button type="button" id="node" class="btn btn-primary">Node Name</button>
+        <button type="button" id="nodeip" class="btn btn-primary">Node & IP</button>
 
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Stdout
+      <a class="navbar-brand" href="#">TraceRoute paths
       </a>
        <p class="navbar-text navbar-right" id="downloadlink" hidden>Download <a href="http://200.12.221.13:5005/downloadstdout?result={{ resultid }}" class="navbar-link">Output</a></p>
         <div class="bs-example clearfix">
