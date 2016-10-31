@@ -6,7 +6,7 @@ class InventoryForm(forms.ModelForm):
     status = forms.CharField(widget=forms.HiddenInput())
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        max_length=255)
+        max_length=255,help_text='''No spaces are allowes, use '-' instead; eg: new-router''')
     variable = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=255)

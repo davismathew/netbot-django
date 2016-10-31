@@ -60,8 +60,12 @@ def createinventory(request):
             if status in [Inventory.ACTIVE, Inventory.DELETED]:
                 inventory.status = form.cleaned_data.get('status')
             inventory.save()
+            if inventory.network == 'EMC':
+                url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/runplaybook'
+            else:
+                url = 'http://10.200.96.164:5555/ansibengine/api/v1.0/runplaybook'
 
-            url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
+            # url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             headers = {'content-type': 'application/json'}
             data= {}
             data['variable']= form.cleaned_data.get('name')
