@@ -38,6 +38,10 @@ $(document).ready(function() {
                                   $('#downloadlink').show();
                                   $('#progress').hide();
                                   $('#AllResult').text(result.value);
+                                    $('#node').on('click',function(){
+                                  $('#AllResult').text(result.value);});
+                                    $('#nodeip').on('click',function(){
+                                  $('#AllResult').text(result.ipath);});
                         },
                    error:function(xhr, status, error) {
                                   $('#AllResult').show();
@@ -65,6 +69,9 @@ $(document).ready(function() {
 
        <center>
        </center>
+        <button type="button" id="node" class="btn btn-primary">Node Name</button>
+        <button type="button" id="nodeip" class="btn btn-primary">Node & IP</button>
+
 
 <nav class="navbar navbar-default">
   <div class="container-fluid">
