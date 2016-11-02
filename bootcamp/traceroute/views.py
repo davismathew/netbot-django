@@ -10,25 +10,32 @@ from django.template.loader import render_to_string
 import requests,json
 
 
+def getvrflist(network):
+    if network.lower() == 'emc'.lower():
+        filename = '/etc/netbot/emcvrflist.txt'
+    elif network.lower() == 'mtn'.lower():
+        filename = '/etc/netbot/mtnvrflist.txt'
+
+    vrfnames = []
+    with open(filename) as f:
+        for line in f:
+            vrfnames.append(line)
+    return vrfnames
+
+
 @login_required
 def traceroute(request):
     # task = get_object_or_404(Task, status=Task.ACTIVE)
-    emcvrfname = []
-    with open('/etc/netbot/emcvrflist.txt') as f:
-        for line in f:
-            emcvrfname.append(line)
+    emcvrfname=getvrflist('emc')
 
-    return render(request, 'traceroute/traceroute.html', {'task': "task", 'emcvrf':emcvrfname})
+    return render(request, 'traceroute/traceroute.html', {'task': "task", 'emcvrf':emcvrfname,'message':""})
 
 @login_required
 def inttraceroute(request):
     # task = get_object_or_404(Task, status=Task.ACTIVE)
-    emcvrfname = []
-    with open('/etc/netbot/emcvrflist.txt') as f:
-        for line in f:
-            emcvrfname.append(line)
+    emcvrfname=getvrflist('emc')
 
-    return render(request, 'traceroute/inttraceroute.html', {'task': "task", 'emcvrf':emcvrfname})
+    return render(request, 'traceroute/inttraceroute.html', {'task': "task", 'emcvrf':emcvrfname,'message':""})
 
 @login_required()
 def gettraceroute(request):
@@ -46,6 +53,7 @@ def gettraceroute(request):
         baseurl = 'http://10.200.96.164:5555'
     url = baseurl+'/ansibengine/api/v1.0/gettraceroute'
     headers = {'content-type': 'application/json'}
+    emcvrfname=getvrflist('emc')
 
     if vrf is True:
         data= {}
@@ -55,6 +63,10 @@ def gettraceroute(request):
         data['vrfname']=vrfname
 
         response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+        statuscode = response.status_code
+        if int(statuscode) == 200:
+            return render(request, 'traceroute/traceroute.html', {'task': "task", 'emcvrf':emcvrfname, 'message':"Another task is running! Please wait.."})
+
     else:
         data= {}
         data['sourceip']=sourceip
@@ -63,6 +75,10 @@ def gettraceroute(request):
         data['vrfname']=vrfname
 
         response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+        statuscode = response.status_code
+        if int(statuscode) == 200:
+            return render(request, 'traceroute/traceroute.html', {'task': "task", 'emcvrf':emcvrfname, 'message':"Another task is running! Please wait.."})
+
     return render(request, 'traceroute/runtraceroute.html', {'task': "task",'baseurl':baseurl})
 
 @login_required()
@@ -82,6 +98,7 @@ def getinterfacetraceroute(request):
         baseurl = 'http://10.200.96.164:5555'
     url = baseurl+'/ansibengine/api/v1.0/getinterfacetraceroute'
     headers = {'content-type': 'application/json'}
+    emcvrfname=getvrflist('emc')
 
     if vrf is True:
         data= {}
@@ -92,6 +109,9 @@ def getinterfacetraceroute(request):
         data['vrfname']=vrfname
 
         response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+        statuscode = response.status_code
+        if int(statuscode) == 200:
+            return render(request, 'traceroute/inttraceroute.html', {'task': "task", 'emcvrf':emcvrfname, 'message':"Another task is running! Please wait.."})
     else:
         data= {}
         data['routerip']=routerip
@@ -101,6 +121,9 @@ def getinterfacetraceroute(request):
         data['vrfname']=vrfname
 
         response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+        statuscode = response.status_code
+        if int(statuscode) == 200:
+            return render(request, 'traceroute/inttraceroute.html', {'task': "task", 'emcvrf':emcvrfname, 'message':"Another task is running! Please wait.."})
     return render(request, 'traceroute/runinterfacetraceroute.html', {'task': "task",'baseurl':baseurl})
 
 

@@ -68,7 +68,6 @@ button {
 }
 </style>
 
-
 <form action="/traceroute/gettrace/" method="POST">
                       {% csrf_token %}
 
@@ -99,5 +98,8 @@ button {
     </div>
 </form>
 
+{% if message %}
+    {{ message }}
+{% endif %}
 
 {% endblock main %}
