@@ -109,8 +109,8 @@ def edit(request, id):
             # url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             headers = {'content-type': 'application/json'}
             data= {}
-            data['variable']="10.10.10.102"
-            data['inventory']=invinstance.name
+            data['variable']= form.cleaned_data.get('name')
+            data['inventory']= form.cleaned_data.get('variable')
             # data='{"variable":"10.10.10.102","inventory":invinstance}'
 #    data = '{"query":{"bool":{"must":[{"text":{"record.document":"SOME_JOURNAL"}},{"text":{"record.articleTitle":"farmers"}}],"must_not":[],"should":[]}},"from":0,"size":50,"sort":[],"facets":{}}'
             response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
