@@ -22,7 +22,6 @@
 $(document).ready(function() {
 
     var destip=$('#destip').val();
-    var baseurl=$('#baseurl').val();
     <!--var inventory=2;-->
     <!--var playbookName='cisco_xe.yml';-->
     <!--alert(playbookName);-->
@@ -30,7 +29,7 @@ $(document).ready(function() {
     $.ajax({
                      type: "POST",
                      url: "/ipam/runipamcheck/",
-                     data: { baseurl : baseurl, destip : destip },
+                     data: { destip : destip },
 
                    success:function(result){
                                   <!--alert(result);-->
@@ -64,7 +63,6 @@ $(document).ready(function() {
 
        <!--  <div class="jumbotron"> -->
        <input hidden type="text" name="destip" id="destip" value="{{ destip }}"><br/><br/>
-       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
 
 
        <center>

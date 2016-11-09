@@ -20,33 +20,32 @@ def dispcheckipam(request):
 def fetchipamcheck(request):
 
     destip = request.POST.get('destip')
-    network = request.POST.get('network')
-    baseurl = 'http://200.12.221.13:5555'
 
-    if network.lower() == 'EMC'.lower():
-        baseurl = 'http://200.12.221.13:5555'
-    else:
-        baseurl = 'http://10.200.96.164:5555'
-    url = baseurl+'/ansibengine/api/v1.0/checkipam'
-
-
-    return render(request, 'ipam/runcheckipam.html', {'destip': destip,'baseurl':baseurl})
+    return render(request, 'ipam/runcheckipam.html', {'destip': destip})
 
 
 
 def runipamcheck(request):
-    baseurl = 'http://200.12.221.13:5555'
+    emcbaseurl = 'http://200.12.221.13:5555'
+    mtnbaseurl = 'http://10.200.96.164:5555'
     if request.method == 'POST':
         baseurl = request.POST.get('baseurl')
         destip = request.POST.get('destip')
     # if request.method == 'POST':
     #     baseurl = request.POST.get('baseurl')
 
-    url = baseurl+'/ansibengine/api/v1.0/checkipam'
+    emcurl = emcbaseurl+'/ansibengine/api/v1.0/checkipam'
+    mtnurl = mtnbaseurl+'/ansibengine/api/v1.0/checkipam'
     headers = {'content-type': 'application/json'}
     data= {}
     data['destip']= destip
 
-    response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
-    return HttpResponse(response.text, content_type = "application/json")
+
+    emcresponse = requests.post(emcurl, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+    mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+
+    temp={}
+    temp['value']=json.loads(emcresponse.text)['value']+" in EMC network \n"+json.loads(mtnresponse.text)['value']+" in MTN network"
+
+    return HttpResponse(json.dumps(temp), content_type = "application/json")
 
