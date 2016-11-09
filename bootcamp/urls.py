@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^articles/', include('bootcamp.articles.urls')),
     url(r'^messages/', include('bootcamp.messenger.urls')),
     url(r'^tasks/', include('bootcamp.tasks.urls')),
+    url(r'^ipam/', include('bootcamp.ipam.urls')),
     url(r'^inventories/', include('bootcamp.inventories.urls')),
     url(r'^results/', include('bootcamp.results.urls')),
     url(r'^cmapp/', include('bootcamp.cmapp.urls')),

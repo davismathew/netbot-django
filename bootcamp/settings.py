@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
 
     'bootcamp.activities',
+    'bootcamp.ipam',
     'bootcamp.authentication',
     'bootcamp.articles',
     'bootcamp.inventories',
