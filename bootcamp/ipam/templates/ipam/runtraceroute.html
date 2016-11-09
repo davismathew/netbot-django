@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{{ task.name }}{% endblock %}
+
+{% block head %}
+  <link href="{% static 'css/articles.css' %}" rel="stylesheet">
+  <script src="{% static 'js/articles.js' %}"></script>
+{% endblock head %}
+
+{% block main %}
+  <ol class="breadcrumb">
+    <li><a href="{% url 'traceroute' %}">{% trans 'Traceroute' %}</a></li>
+    <li class="active">{% trans 'Traceroute Run Results' %}</li>
+  </ol>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <script>
+
+$(document).ready(function() {
+
+    var ip=$('#ip').val();
+    var baseurl=$('#baseurl').val();
+    <!--var inventory=2;-->
+    <!--var playbookName='cisco_xe.yml';-->
+    <!--alert(playbookName);-->
+    $('#progress').show();
+    $.ajax({
+                     type: "POST",
+                     url: "/traceroute/runtraceroute/",
+                     data: { baseurl : baseurl },
+
+                   success:function(result){
+                                  <!--alert(result);-->
+                                  $('#AllResult').show();
+                                  $('#downloadlink').show();
+                                  $('#progress').hide();
+                                  $('#AllResult').text(result.value);
+                                    $('#node').on('click',function(){
+                                  $('#AllResult').text(result.value);});
+                                    $('#nodeip').on('click',function(){
+                                  $('#AllResult').text(result.ipath);});
+                        },
+                   error:function(xhr, status, error) {
+                                  $('#AllResult').show();
+                                  $('#downloadlink').show();
+                                  $('#progress').hide();
+                                  alert(xhr.status);
+                                  alert(status);
+                                  $('#AllResult').text(error);
+                   }
+            });
+
+
+});
+
+</script>
+
+
+
+
+
+       <!--  <div class="jumbotron"> -->
+       <input hidden type="text" name="ip" id="ip" value="{{ ip }}"><br/><br/>
+       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
+
+
+       <center>
+       </center>
+        <button type="button" id="node" class="btn btn-primary">Node Name</button>
+        <button type="button" id="nodeip" class="btn btn-primary">Node & IP</button>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">TraceRoute paths
+      </a>
+       <p class="navbar-text navbar-right" id="downloadlink" hidden>Download <a href="http://200.12.221.13:5005/downloadstdout?result={{ resultid }}" class="navbar-link">Output</a></p>
+        <div class="bs-example clearfix">
+       <textarea rows="100" cols="100" id="AllResult" hidden>
+
+       </textarea>
+
+</div>
+
+    </div>
+  </div>
+</nav>
+<div id="progress" class="progress">
+  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+    <span class="sr-only">100% Complete</span>
+  </div>
+</div>
+
+
+{% endblock main %}
