@@ -47,7 +47,7 @@ def gettraceroute(request):
     vrfname = request.POST.get('vrfdropdown')
     baseurl = 'http://200.12.221.13:5555'
 
-    if network.lower() == 'EMC'.lower():
+    if str(network).lower() == 'EMC'.lower():
         baseurl = 'http://200.12.221.13:5555'
     else:
         baseurl = 'http://10.200.96.164:5555'

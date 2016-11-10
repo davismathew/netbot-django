@@ -120,11 +120,11 @@ def getresultout(request, id):
 @login_required()
 def resultoutput(request):
     resultid=''
-    # if request.method == 'post':
-    #     resultid = request.POST.get('result')
+    if request.method == 'POST':
+        resultid = request.POST.get('result')
     #     test = request.POST.get('test')
 
-    result = get_object_or_404(Result, pk=34)
+    result = get_object_or_404(Result, pk=resultid)
 
     emcpath= '/etc/emcansibout/'
     mtnpath= '/etc/mtnansibout/'
