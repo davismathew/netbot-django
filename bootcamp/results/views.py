@@ -114,8 +114,9 @@ def runresult(request):
 
 @login_required()
 def getresultout(request, id):
+    result = get_object_or_404(Result, pk=id)
     baseurl = get_path('baseurl')
-    return render(request, 'results/outputfile.html', {'result':id,'baseurl':baseurl})
+    return render(request, 'results/outputfile.html', {'result':result,'baseurl':baseurl})
 
 @login_required()
 def resultoutput(request):
@@ -154,6 +155,23 @@ def resultdetails(request, id):
     mtninventory = Result.objects.filter(network="MTN")
     return render(request, 'results/result.html', {'result':result, 'emcinventory':emcinventory, 'mtninventory':mtninventory})
 
+@login_required()
+def downloadstdout(request, id):
+    # taskid=request.POST['taskid']
+    # tasks = Task.objects.filter(pk=id)
+    result = get_object_or_404(Result, pk=id)
+    stdoutfile = result.outputfile
+    fileRead = open(stdoutfile)
+    Output = fileRead.read()
+    Output=Output.replace("[0;32m","")
+    Output=Output.replace("[0;31m","")
+    Output=Output.replace("[0m"," ")
+    Output=Output.replace("\x1b"," ")
+    response = HttpResponse(content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename="%s.txt"' % 'result'+str(result.id)
+    response.write(Output)
+    return response
+
 @login_required
 def createresult(request):
     baseurl = get_path('baseurl')
@@ -191,7 +209,7 @@ def createresult(request):
         # tags = form.cleaned_data.get('tags')
         # task.create_tags(tags)
         # return redirect('/results/')
-    return render(request, 'results/playoutput.html', {'result':result.id,'baseurl':baseurl})
+    return render(request, 'results/playoutput.html', {'result':result,'baseurl':baseurl})
 
 @login_required
 def rerunresult(request):

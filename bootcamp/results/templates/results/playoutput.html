@@ -38,8 +38,9 @@ $(document).ready(function() {
                      data: { result : result , test : test},
 
                    success:function(result){
-                                  alert(result.value);
+                                  <!--alert(result.value);-->
                                   $('#AllResult').show();
+                                  $('#successmessage').show();
                                   $('#downloadlink').show();
                                   $('#progress').hide();
                                   $('#AllResult').text(result.value);
@@ -65,10 +66,9 @@ $(document).ready(function() {
 
 
        <!--  <div class="jumbotron"> -->
-       <input hidden type="text" name="result" id="result" value="{{ result }}"><br/><br/>
-       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
 
-
+<div class="alert alert-info" role="alert" id="successmessage" hidden>Playbook named '{{ result.playbook }}' has executed for task named '{{ result.name }}'
+</div>
        <center>
        </center>
 
@@ -77,7 +77,7 @@ $(document).ready(function() {
     <div class="navbar-header">
       <a class="navbar-brand" href="#">Stdout
       </a>
-       <p class="navbar-text navbar-right" id="downloadlink" hidden>Download <a href="http://200.12.221.13:5005/downloadstdout?result={{ resultid }}" class="navbar-link">Output</a></p>
+       <p class="navbar-text navbar-right" id="downloadlink" hidden>Download <a href="{{ baseurl }}/results/downloadstdout/{{ result.id }}" class="navbar-link">Output</a></p>
         <div class="bs-example clearfix">
        <textarea rows="100" cols="100" id="AllResult" hidden>
 
@@ -93,6 +93,8 @@ $(document).ready(function() {
     <span class="sr-only">100% Complete</span>
   </div>
 </div>
+       <input hidden type="text" name="result" id="result" value="{{ result.id }}"><br/><br/>
+       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
 
 
 {% endblock main %}

@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^resultoutput/$', csrf_exempt(views.resultoutput), name='resultoutput'),
     url(r'^resultdetails/(?P<id>\d+)/$', csrf_exempt(views.resultdetails), name='resultdetails'),
     url(r'^getresultout/(?P<id>\d+)/$', csrf_exempt(views.getresultout), name='getresultout'),
+    url(r'^downloadstdout/(?P<id>\d+)/$', csrf_exempt(views.downloadstdout), name='downloadstdout'),
     # url(r'^preview/$', views.preview, name='preview'),
     # url(r'^drafts/$', views.drafts, name='drafts'),
     # url(r'^comment/$', views.comment, name='comment'),
