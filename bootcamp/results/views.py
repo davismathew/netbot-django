@@ -168,7 +168,8 @@ def downloadstdout(request, id):
     Output=Output.replace("[0m"," ")
     Output=Output.replace("\x1b"," ")
     response = HttpResponse(content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename="%s.txt"' % 'result'+str(result.id)
+    filename = 'result'+str(result.id)
+    response['Content-Disposition'] = 'attachment; filename="%s.txt"' % filename
     response.write(Output)
     return response
 

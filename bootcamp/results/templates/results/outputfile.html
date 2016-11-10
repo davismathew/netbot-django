@@ -9,7 +9,6 @@
 {% endblock head %}
 
 {% block main %}
-{{ result.inventory }}
 
   <ol class="breadcrumb">
     <li><a href="{% url 'results' %}">{% trans 'Results' %}</a></li>
@@ -66,7 +65,7 @@ $(document).ready(function() {
 
        <!--  <div class="jumbotron"> -->
 
-<div class="alert alert-info" role="alert">Playbook named '{{ result.playbook }}' has executed for task named '{{ result.name }}'
+<div class="alert alert-info" role="alert">Playbook named '{{ result.playbook }}' has executed for task named '{{ result.name }}' on inventory '{{ result.inventory }}'
 </div>
 
        <center>
