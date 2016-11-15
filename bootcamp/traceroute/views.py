@@ -8,7 +8,7 @@ from bootcamp.decorators import ajax_required
 import markdown
 from django.template.loader import render_to_string
 import requests,json
-from bootcamp.utils.loadconfig import get_path
+from bootcamp.utils.loadconfig import get_vars
 
 def getvrflist(network):
     if network.lower() == 'emc'.lower():
@@ -45,12 +45,12 @@ def gettraceroute(request):
     vrf = request.POST.get('vrf')
     network = request.POST.get('network')
     vrfname = request.POST.get('vrfdropdown')
-    baseurl = get_path('ansibengineemc')
+    baseurl = get_vars('ansibengineemc')
 
     if str(network).lower() == 'EMC'.lower():
-        baseurl = get_path('ansibengineemc')
+        baseurl = get_vars('ansibengineemc')
     else:
-        baseurl = get_path('ansibenginemtn')
+        baseurl = get_vars('ansibenginemtn')
     url = baseurl+'/ansibengine/api/v1.0/gettraceroute'
     headers = {'content-type': 'application/json'}
     emcvrfname=getvrflist('emc')
@@ -90,12 +90,12 @@ def getinterfacetraceroute(request):
     vrf = request.POST.get('vrf')
     network = request.POST.get('network')
     vrfname = request.POST.get('vrfdropdown')
-    baseurl = get_path('ansibengineemc')
+    baseurl = get_vars('ansibengineemc')
 
     if network.lower() == 'EMC'.lower():
-        baseurl = get_path('ansibengineemc')
+        baseurl = get_vars('ansibengineemc')
     else:
-        baseurl = get_path('ansibenginemtn')
+        baseurl = get_vars('ansibenginemtn')
     url = baseurl+'/ansibengine/api/v1.0/getinterfacetraceroute'
     headers = {'content-type': 'application/json'}
     emcvrfname=getvrflist('emc')
@@ -128,7 +128,7 @@ def getinterfacetraceroute(request):
 
 
 def runtraceroute(request):
-    baseurl = get_path('ansibengineemc')
+    baseurl = get_vars('ansibengineemc')
     if request.method == 'POST':
         baseurl = request.POST.get('baseurl')
     # if request.method == 'POST':
@@ -144,7 +144,7 @@ def runtraceroute(request):
     return HttpResponse(response.text, content_type = "application/json")
 
 def runinterfacetraceroute(request):
-    baseurl = get_path('ansibengineemc')
+    baseurl = get_vars('ansibengineemc')
     if request.method == 'POST':
         baseurl = request.POST.get('baseurl')
     # if request.method == 'POST':

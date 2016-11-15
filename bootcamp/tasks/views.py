@@ -8,12 +8,12 @@ from django.contrib.auth.decorators import login_required
 from bootcamp.decorators import ajax_required
 import markdown
 from django.template.loader import render_to_string
-from bootcamp.utils.loadconfig import get_path
+from bootcamp.utils.loadconfig import get_vars
 
 def _tasks(request, tasks):
     paginator = Paginator(tasks, 10)
     # baseurl="http://127.0.0.1:8000"
-    baseurl = get_path('baseurl')
+    baseurl = get_vars('baseurl')
     page = request.GET.get('page')
     try:
         tasks = paginator.page(page)

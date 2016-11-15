@@ -9,13 +9,13 @@ from bootcamp.decorators import ajax_required
 import markdown,json
 from django.template.loader import render_to_string
 import requests, json
-from bootcamp.utils.loadconfig import get_path
+from bootcamp.utils.loadconfig import get_vars
 
 
 def _results(request, results):
     paginator = Paginator(results, 10)
     # baseurl="http://127.0.0.1:8000"
-    baseurl = get_path('baseurl')
+    baseurl = get_vars('baseurl')
     page = request.GET.get('page')
     try:
         results = paginator.page(page)
@@ -62,8 +62,8 @@ def runresult(request):
     mtnpath= '/etc/mtnansibout'
     fact='nofile'
     headers = {'content-type': 'application/json'}
-    ansibengineemc = get_path('ansibengineemc')
-    ansibenginemtn = get_path('ansibenginemtn')
+    ansibengineemc = get_vars('ansibengineemc')
+    ansibenginemtn = get_vars('ansibenginemtn')
 
     if result.factstatus:
         if result.network == 'EMC':
@@ -117,7 +117,7 @@ def runresult(request):
 @login_required()
 def getresultout(request, id):
     result = get_object_or_404(Result, pk=id)
-    baseurl = get_path('baseurl')
+    baseurl = get_vars('baseurl')
     return render(request, 'results/outputfile.html', {'result':result,'baseurl':baseurl})
 
 @login_required()
@@ -177,7 +177,7 @@ def downloadstdout(request, id):
 
 @login_required
 def createresult(request):
-    baseurl = get_path('baseurl')
+    baseurl = get_vars('baseurl')
     if request.method == 'POST':
         result = Result()
         inventory = request.POST.get('inventory')
@@ -216,7 +216,7 @@ def createresult(request):
 
 @login_required
 def rerunresult(request):
-    baseurl = get_path('baseurl')
+    baseurl = get_vars('baseurl')
     if request.method == 'POST':
         resultid = request.POST.get('resultid')
         oldresult = get_object_or_404(Result, pk=resultid)

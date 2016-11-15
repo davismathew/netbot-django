@@ -8,13 +8,13 @@ from bootcamp.decorators import ajax_required
 import markdown
 from django.template.loader import render_to_string
 import requests, json
-from bootcamp.utils.loadconfig import get_path
+from bootcamp.utils.loadconfig import get_vars
 
 
 def _inventories(request, inventories):
     paginator = Paginator(inventories, 10)
     # baseurl="http://127.0.0.1:8000"
-    baseurl = get_path('baseurl')
+    baseurl = get_vars('baseurl')
     page = request.GET.get('page')
     try:
         inventories = paginator.page(page)
@@ -60,8 +60,8 @@ def createinventory(request):
             if status in [Inventory.ACTIVE, Inventory.DELETED]:
                 inventory.status = form.cleaned_data.get('status')
             inventory.save()
-            ansibengineemc = get_path('ansibengineemc')
-            ansibenginemtn = get_path('ansibenginemtn')
+            ansibengineemc = get_vars('ansibengineemc')
+            ansibenginemtn = get_vars('ansibenginemtn')
 
             if inventory.network == 'EMC':
                 url = ansibengineemc+'/ansibengine/api/v1.0/altinventory'
@@ -105,8 +105,8 @@ def edit(request, id):
         invinstance = get_object_or_404(Inventory, pk=id)
         if form.is_valid():
             form.save()
-            ansibengineemc = get_path('ansibengineemc')
-            ansibenginemtn = get_path('ansibenginemtn')
+            ansibengineemc = get_vars('ansibengineemc')
+            ansibenginemtn = get_vars('ansibenginemtn')
 
             if invinstance.network == 'EMC':
                 url = ansibengineemc+'/ansibengine/api/v1.0/altinventory'
