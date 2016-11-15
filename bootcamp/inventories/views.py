@@ -60,10 +60,13 @@ def createinventory(request):
             if status in [Inventory.ACTIVE, Inventory.DELETED]:
                 inventory.status = form.cleaned_data.get('status')
             inventory.save()
+            ansibengineemc = get_path('ansibengineemc')
+            ansibenginemtn = get_path('ansibenginemtn')
+
             if inventory.network == 'EMC':
-                url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
+                url = ansibengineemc+'/ansibengine/api/v1.0/altinventory'
             else:
-                url = 'http://10.200.96.164:5555/ansibengine/api/v1.0/altinventory'
+                url = ansibenginemtn+'/ansibengine/api/v1.0/altinventory'
 
             # url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             headers = {'content-type': 'application/json'}
@@ -102,10 +105,13 @@ def edit(request, id):
         invinstance = get_object_or_404(Inventory, pk=id)
         if form.is_valid():
             form.save()
+            ansibengineemc = get_path('ansibengineemc')
+            ansibenginemtn = get_path('ansibenginemtn')
+
             if invinstance.network == 'EMC':
-                url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
+                url = ansibengineemc+'/ansibengine/api/v1.0/altinventory'
             else:
-                url = 'http://10.200.96.164:5555/ansibengine/api/v1.0/altinventory'
+                url = ansibenginemtn+'/ansibengine/api/v1.0/altinventory'
             # url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             headers = {'content-type': 'application/json'}
             data= {}

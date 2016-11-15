@@ -8,7 +8,7 @@ from bootcamp.decorators import ajax_required
 import markdown
 from django.template.loader import render_to_string
 import requests,json
-
+from bootcamp.utils.loadconfig import get_path
 
 @login_required
 def dispcheckipam(request):
@@ -26,8 +26,8 @@ def fetchipamcheck(request):
 
 
 def runipamcheck(request):
-    emcbaseurl = 'http://200.12.221.13:5555'
-    mtnbaseurl = 'http://10.200.96.164:5555'
+    emcbaseurl = get_path('ansibengineemc')
+    mtnbaseurl = get_path('ansibenginemtn')
     if request.method == 'POST':
         baseurl = request.POST.get('baseurl')
         destip = request.POST.get('destip')

@@ -17,6 +17,14 @@ def emccm(request):
 def mtncm(request):
     return render(request, 'cmapp/mtncmapp.html')
 
+@login_required
+def testmodal(request):
+    return render(request, 'cmapp/task.html')
+
+@login_required
+def newmodal(request):
+    return render(request, 'cmapp/newmodal.html')
+
 
 
 # def _inventories(request, inventories):

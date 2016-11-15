@@ -62,21 +62,23 @@ def runresult(request):
     mtnpath= '/etc/mtnansibout'
     fact='nofile'
     headers = {'content-type': 'application/json'}
+    ansibengineemc = get_path('ansibengineemc')
+    ansibenginemtn = get_path('ansibenginemtn')
 
     if result.factstatus:
         if result.network == 'EMC':
-            facturl = 'http://200.12.221.13:5555/ansibengine/api/v1.0/sharefact'
+            facturl = ansibengineemc+'/ansibengine/api/v1.0/sharefact'
         else:
-            facturl = 'http://10.200.96.164:5555/ansibengine/api/v1.0/sharefact'
+            facturl = ansibenginemtn+'/ansibengine/api/v1.0/sharefact'
         fact = result.factfile
         factdata={}
         factdata["fact"] = fact
         factresponse = requests.post(facturl, data=json.dumps(factdata), headers=headers, auth=('netbot','N#tB@t'))
 
     if result.network == 'EMC':
-        url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/runplaybook'
+        url = ansibengineemc+'/ansibengine/api/v1.0/runplaybook'
     else:
-        url = 'http://10.200.96.164:5555/ansibengine/api/v1.0/runplaybook'
+        url = ansibenginemtn+'/ansibengine/api/v1.0/runplaybook'
 
     data={}
     # data='{"playbook":"cisco_demo.yml" , "inventory":"dev","resultid":"1000","fact":"factshare.txt"}'
