@@ -1,5 +1,7 @@
 import os
 import ConfigParser
+from bootcamp.settings import ENVIRONMENT
+
 
 def readconf():
     config = ConfigParser.ConfigParser()
@@ -20,28 +22,15 @@ def project_path(type):
 def get_vars(type):
     config = readconf()
     if type == 'project':
-        vars = config.get('prod', 'project_path')
+        vars = config.get(ENVIRONMENT, 'project_path')
     elif type == 'play':
-        vars = config.get('prod', 'project_path')
+        vars = config.get(ENVIRONMENT, 'project_path')
     elif type == 'resultout':
-        vars = config.get('prod', 'result_path')
+        vars = config.get(ENVIRONMENT, 'result_path')
     elif type == 'baseurl':
-        vars = config.get('prod', 'baseurl')
+        vars = config.get(ENVIRONMENT, 'baseurl')
     elif type == 'ansibengineemc':
-        vars = config.get('prod', 'ansibengineemc')
+        vars = config.get(ENVIRONMENT, 'ansibengineemc')
     elif type == 'ansibenginemtn':
-        vars = config.get('prod', 'ansibenginemtn')
-####stage env
-    if type == 'project':
-        vars = config.get('stage', 'project_path')
-    elif type == 'play':
-        vars = config.get('stage', 'project_path')
-    elif type == 'resultout':
-        vars = config.get('stage', 'result_path')
-    elif type == 'baseurl':
-        vars = config.get('stage', 'baseurl')
-    elif type == 'ansibengineemc':
-        vars = config.get('stage', 'ansibengineemc')
-    elif type == 'ansibenginemtn':
-        vars = config.get('stage', 'ansibenginemtn')
+        vars = config.get(ENVIRONMENT, 'ansibenginemtn')
     return vars
