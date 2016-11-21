@@ -45,7 +45,7 @@ def runipamcheck(request):
     mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
 
     temp={}
-    temp['value']=json.loads(emcresponse.text)['value']+" in EMC network \n"+json.loads(mtnresponse.text)['value']+" in MTN network"
+    temp['value']="Entered Subnet :"+destip+"\n\n    On EMC Network\n\n         "+json.loads(emcresponse.text)['value']+"\n\n\n       On MTN Network\n\n         "+json.loads(mtnresponse.text)['value']+" "
 
     return HttpResponse(json.dumps(temp), content_type = "application/json")
 
