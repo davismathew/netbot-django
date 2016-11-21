@@ -60,6 +60,10 @@ def createinventory(request):
             if status in [Inventory.ACTIVE, Inventory.DELETED]:
                 inventory.status = form.cleaned_data.get('status')
             inventory.save()
+
+            inventory.filename = form.cleaned_data.get('network')+str("inv")+str(inventory.id)
+            inventory.save()
+
             ansibengineemc = get_vars('ansibengineemc')
             ansibenginemtn = get_vars('ansibenginemtn')
 
@@ -71,7 +75,7 @@ def createinventory(request):
             # url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             headers = {'content-type': 'application/json'}
             data= {}
-            data['variable']= form.cleaned_data.get('name')
+            data['variable']= form.cleaned_data.get('network')+str("inv")+str(inventory.id)
             data['inventory']= form.cleaned_data.get('variable')
 
             # data='{"variable":"10.10.10.102"}'

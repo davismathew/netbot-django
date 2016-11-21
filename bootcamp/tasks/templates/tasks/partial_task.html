@@ -27,7 +27,7 @@
                           {{ task.network }}
                           {% for inv in emcinventory %}
 
-                        <option value={{ inv.name }}>{{ inv.name }}</option>
+                        <option value={{ inv.filename }}>{{ inv.name }}</option>
 
                           {% endfor %}
                         {% endif %}
@@ -36,7 +36,7 @@
                           {{ task.network }}
                           {% for inv in mtninventory %}
 
-                        <option value={{ inv.name }}>{{ inv.name }}</option>
+                        <option value={{ inv.filename }}>{{ inv.name }}</option>
 
                           {% endfor %}
                         {% endif %}

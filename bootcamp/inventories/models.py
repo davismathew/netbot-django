@@ -15,6 +15,7 @@ class Inventory(models.Model):
     )
 
     name = models.CharField(max_length=255)
+    filename = models.CharField(max_length=255, null = True)
     network = models.CharField(max_length=255, null=True, default="EMC")
     variable = models.CharField(max_length=255, null=True)
     slug = models.SlugField(max_length=255, null=True, blank=True)
