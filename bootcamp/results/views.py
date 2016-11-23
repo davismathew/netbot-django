@@ -244,7 +244,7 @@ def rerunresult(request):
         # tags = form.cleaned_data.get('tags')
         # task.create_tags(tags)
         # return redirect('/results/')
-    return render(request, 'results/playoutput.html', {'result':result.id,'baseurl':baseurl})
+    return render(request, 'results/playoutput.html', {'result':result,'baseurl':baseurl})
 
 
 # @login_required
