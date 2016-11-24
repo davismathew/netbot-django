@@ -23,14 +23,18 @@ $(document).ready(function() {
 
     var ip=$('#ip').val();
     var baseurl=$('#baseurl').val();
+    var sourceip=$('#sourceip').val();
+    var destip=$('#destip').val();
+    var vrfname=$('#vrfname').val();
+    var vrf=$('#vrf').val();
     <!--var inventory=2;-->
     <!--var playbookName='cisco_xe.yml';-->
     <!--alert(playbookName);-->
     $('#progress').show();
     $.ajax({
                      type: "POST",
-                     url: "/traceroute/runtraceroute/",
-                     data: { baseurl : baseurl },
+                     url: "/traceroute/runtraceapi/",
+                     data: { baseurl : baseurl, sourceip : sourceip, destip : destip, vrfname : vrfname, vrf : vrf },
 
                    success:function(result){
                                   <!--alert(result);-->
@@ -59,12 +63,7 @@ $(document).ready(function() {
 </script>
 
 
-
-
-
        <!--  <div class="jumbotron"> -->
-       <input hidden type="text" name="ip" id="ip" value="{{ ip }}"><br/><br/>
-       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
 
 
        <center>
@@ -88,11 +87,18 @@ $(document).ready(function() {
     </div>
   </div>
 </nav>
+
 <div id="progress" class="progress">
   <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
     <span class="sr-only">100% Complete</span>
   </div>
 </div>
+       <input hidden type="text" name="ip" id="ip" value="{{ ip }}"><br/><br/>
+       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
+       <input hidden type="text" name="sourceip" id="sourceip" value="{{ sourceip }}"><br/><br/>
+       <input hidden type="text" name="destip" id="destip" value="{{ destip }}"><br/><br/>
+       <input hidden type="text" name="vrfname" id="vrfname" value="{{ vrfname }}"><br/><br/>
+       <input hidden type="text" name="vrf" id="vrf" value="{{ vrf }}"><br/><br/>
 
 
 {% endblock main %}

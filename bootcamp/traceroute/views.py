@@ -38,6 +38,113 @@ def inttraceroute(request):
     return render(request, 'traceroute/inttraceroute.html', {'task': "task", 'emcvrf':emcvrfname,'message':""})
 
 @login_required()
+def runtrace(request):
+    sourceip = request.POST.get('sourceip')
+    destip = request.POST.get('destip')
+    vrf = request.POST.get('vrf')
+    network = request.POST.get('network')
+    vrfname = request.POST.get('vrfname')
+    baseurl = get_vars('ansibengineemc')
+    emcvrfname=getvrflist('emc')
+
+    if sourceip == '' or destip == '' or vrf == '' or vrfname == '' or network == '':
+        return render(request, 'traceroute/traceroute.html', {'task': "task", 'emcvrf':emcvrfname,'message':"Please fill in all the details!!"})
+
+
+    if str(network).lower() == 'EMC'.lower():
+        baseurl = get_vars('ansibengineemc')
+    else:
+        baseurl = get_vars('ansibenginemtn')
+
+    if vrf == 'True':
+        vrf="True"
+    else:
+        vrf="False"
+
+    return render(request, 'traceroute/runtraceroute.html', {'sourceip': sourceip, 'destip':destip,'vrfname': vrfname, 'vrf':vrf,'baseurl':baseurl})
+
+
+@login_required()
+def runtraceapi(request):
+    sourceip = request.POST.get('sourceip')
+    destip = request.POST.get('destip')
+    vrf = request.POST.get('vrf')
+    vrfname = request.POST.get('vrfname')
+    baseurl = request.POST.get('baseurl')
+
+    url = baseurl+'/ansibengine/api/v1.0/runtrace'
+    headers = {'content-type': 'application/json'}
+
+    data= {}
+    data['sourceip']=sourceip
+    data['destip']=destip
+    data['vrfname']=vrfname
+
+    if vrf == 'True':
+        data['vrf']="True"
+    else:
+        data['vrf']="False"
+    response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+    return HttpResponse(response.text, content_type = "application/json")
+
+
+@login_required()
+def runinterfacetrace(request):
+    routerip = request.POST.get('sourceip')
+    interfaceip = request.POST.get('sourceint')
+    destip = request.POST.get('destip')
+    vrf = request.POST.get('vrf')
+    network = request.POST.get('network')
+    vrfname = request.POST.get('vrfdropdown')
+    baseurl = get_vars('ansibengineemc')
+    emcvrfname=getvrflist('emc')
+
+
+
+    if routerip == '' or interfaceip == '' or destip == '' or vrf == '' or vrfname == '' or network == '':
+        return render(request, 'traceroute/inttraceroute.html', {'task': "task", 'emcvrf':emcvrfname,'message':"Please fill in all the details!!"})
+
+
+    if str(network).lower() == 'EMC'.lower():
+        baseurl = get_vars('ansibengineemc')
+    else:
+        baseurl = get_vars('ansibenginemtn')
+
+    if vrf == 'True':
+        vrf="True"
+    else:
+        vrf="False"
+
+    return render(request, 'traceroute/runinterfacetraceroute.html', {'routerip': routerip, 'interfaceip':interfaceip, 'destip':destip,'vrfname': vrfname, 'vrf':vrf,'baseurl':baseurl})
+
+
+@login_required()
+def runinterfacetraceapi(request):
+    routerip = request.POST.get('routerip')
+    interfaceip = request.POST.get('interfaceip')
+    destip = request.POST.get('destip')
+    vrf = request.POST.get('vrf')
+    vrfname = request.POST.get('vrfname')
+    baseurl = request.POST.get('baseurl')
+
+    url = baseurl+'/ansibengine/api/v1.0/runinterfacetrace'
+    headers = {'content-type': 'application/json'}
+
+    data= {}
+    data['routerip']=routerip
+    data['interfaceip']=interfaceip
+    data['destip']=destip
+    data['vrfname']=vrfname
+
+    if vrf == 'True':
+        data['vrf']="True"
+    else:
+        data['vrf']="False"
+    response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+    return HttpResponse(response.text, content_type = "application/json")
+
+
+@login_required()
 def gettraceroute(request):
 
     sourceip = request.POST.get('sourceip')

@@ -68,7 +68,7 @@ button {
 }
 </style>
 
-<form action="/traceroute/gettrace/" method="POST">
+<form action="/traceroute/runtrace/" method="POST">
                       {% csrf_token %}
 
     <div>
@@ -82,8 +82,8 @@ button {
 
             <div><label for="vrf">Use vrf name:</label>
     <input type="checkbox" id="vrf" name="vrf" value="True" checked=""/></div>
-            <div><label for="vrfdropdown">VRF Names:</label>
-                <select name="vrfname" id="vrfdropdown">
+            <div><label for="vrfname">VRF Names:</label>
+                <select name="vrfname" id="vrfname">
             {% for vrf in emcvrf %}
                 <option value={{ vrf }}>{{ vrf }}</option>
             {% endfor %}
@@ -97,9 +97,9 @@ button {
         <button type="submit">Traceroute</button>
     </div>
 </form>
-
+<font color="red">
 {% if message %}
     {{ message }}
 {% endif %}
-
+</font>
 {% endblock main %}

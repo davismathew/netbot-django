@@ -23,14 +23,19 @@ $(document).ready(function() {
 
     var ip=$('#ip').val();
     var baseurl=$('#baseurl').val();
+    var routerip=$('#routerip').val();
+    var interfaceip=$('#interfaceip').val();
+    var destip=$('#destip').val();
+    var vrfname=$('#vrfname').val();
+    var vrf=$('#vrf').val();
     <!--var inventory=2;-->
     <!--var playbookName='cisco_xe.yml';-->
     <!--alert(playbookName);-->
     $('#progress').show();
     $.ajax({
                      type: "POST",
-                     url: "/traceroute/runinterfacetraceroute/",
-                     data: { baseurl : baseurl },
+                     url: "/traceroute/runinterfacetraceapi/",
+                     data: { baseurl : baseurl, routerip : routerip, interfaceip : interfaceip, destip : destip, vrfname : vrfname, vrf : vrf },
 
                    success:function(result){
                                   <!--alert(result);-->
@@ -63,8 +68,6 @@ $(document).ready(function() {
 
 
        <!--  <div class="jumbotron"> -->
-       <input hidden type="text" name="ip" id="ip" value="{{ ip }}"><br/><br/>
-       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
 
 
        <center>
@@ -94,6 +97,14 @@ $(document).ready(function() {
     <span class="sr-only">100% Complete</span>
   </div>
 </div>
+
+       <input hidden type="text" name="ip" id="ip" value="{{ ip }}"><br/><br/>
+       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
+       <input hidden type="text" name="routerip" id="routerip" value="{{ routerip }}"><br/><br/>
+       <input hidden type="text" name="interfaceip" id="interfaceip" value="{{ interfaceip }}"><br/><br/>
+       <input hidden type="text" name="destip" id="destip" value="{{ destip }}"><br/><br/>
+       <input hidden type="text" name="vrfname" id="vrfname" value="{{ vrfname }}"><br/><br/>
+       <input hidden type="text" name="vrf" id="vrf" value="{{ vrf }}"><br/><br/>
 
 
 {% endblock main %}
