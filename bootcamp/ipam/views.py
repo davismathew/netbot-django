@@ -38,13 +38,31 @@ def runipamcheck(request):
     mtnurl = mtnbaseurl+'/ansibengine/api/v1.0/checkipam'
     headers = {'content-type': 'application/json'}
     data= {}
+    temp={}
     data['destip']= destip
 
+    try:
+        emcresponse = requests.post(emcurl, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+        mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+        if not emcresponse.status_code == 200 or not mtnresponse.status_code == 200:
+            temp['value']="Error !! Unexpected response. Please report this"
+            return HttpResponse(json.dumps(temp), content_type = "application/json")
 
-    emcresponse = requests.post(emcurl, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
-    mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+    except requests.exceptions.RequestException as e:
+        # return "Error: {}".format(e)
+        temp['value']="Error connecting to API. Please report this"
+        return HttpResponse(json.dumps(temp), content_type = "application/json")
 
-    temp={}
+
+
+    # if (json.loads(mtnresponse.text)['value']) is None:
+    #     temp['value']="Entered Subnet :"+destip+"\n\n    On EMC Network\n\n         "+json.loads(emcresponse.text)['value']+"\n\n\n       On MTN Network\n\nApi returned null"
+    #     return HttpResponse(json.dumps(temp), content_type = "application/json")
+    # elif (json.loads(emcresponse.text)['value']) is None:
+    #     temp['value']="Entered Subnet :"+destip+"\n\n    On MTN Network\n\n         "+json.loads(mtnresponse.text)['value']+"\n\n\n       On EMC Network\n\nApi returned null"
+    #     return HttpResponse(json.dumps(temp), content_type = "application/json")
+
+
     temp['value']="Entered Subnet :"+destip+"\n\n    On EMC Network\n\n         "+json.loads(emcresponse.text)['value']+"\n\n\n       On MTN Network\n\n         "+json.loads(mtnresponse.text)['value']+" "
 
     return HttpResponse(json.dumps(temp), content_type = "application/json")

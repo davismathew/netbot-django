@@ -75,6 +75,7 @@ def runtraceapi(request):
     url = baseurl+'/ansibengine/api/v1.0/runtrace'
     headers = {'content-type': 'application/json'}
 
+    temp= {}
     data= {}
     data['sourceip']=sourceip
     data['destip']=destip
@@ -84,7 +85,17 @@ def runtraceapi(request):
         data['vrf']="True"
     else:
         data['vrf']="False"
-    response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+    try:
+        response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+        if not response.status_code == 201 :
+            temp['value']="Error!! Unexpected response. Please report this"
+            return HttpResponse(json.dumps(temp), content_type = "application/json")
+
+    except requests.exceptions.RequestException as e:
+        # return "Error: {}".format(e)
+        temp['value']="Error connecting to API. Please report this"
+        return HttpResponse(json.dumps(temp), content_type = "application/json")
+
     return HttpResponse(response.text, content_type = "application/json")
 
 
@@ -130,6 +141,7 @@ def runinterfacetraceapi(request):
     url = baseurl+'/ansibengine/api/v1.0/runinterfacetrace'
     headers = {'content-type': 'application/json'}
 
+    temp= {}
     data= {}
     data['routerip']=routerip
     data['interfaceip']=interfaceip
@@ -140,10 +152,20 @@ def runinterfacetraceapi(request):
         data['vrf']="True"
     else:
         data['vrf']="False"
-    response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+    try:
+        response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+        if not response.status_code == 201 :
+            temp['value']="Error!! Unexpected response. Please report this"
+            return HttpResponse(json.dumps(temp), content_type = "application/json")
+
+    except requests.exceptions.RequestException as e:
+        # return "Error: {}".format(e)
+        temp['value']="Error connecting to API. Please report this"
+        return HttpResponse(json.dumps(temp), content_type = "application/json")
     return HttpResponse(response.text, content_type = "application/json")
 
 
+##deprecated method
 @login_required()
 def gettraceroute(request):
 
@@ -188,6 +210,7 @@ def gettraceroute(request):
 
     return render(request, 'traceroute/runtraceroute.html', {'task': "task",'baseurl':baseurl})
 
+##deprecated method
 @login_required()
 def getinterfacetraceroute(request):
 
@@ -233,7 +256,7 @@ def getinterfacetraceroute(request):
             return render(request, 'traceroute/inttraceroute.html', {'task': "task", 'emcvrf':emcvrfname, 'message':"Another task is running! Please wait.."})
     return render(request, 'traceroute/runinterfacetraceroute.html', {'task': "task",'baseurl':baseurl})
 
-
+##deprecated method
 def runtraceroute(request):
     baseurl = get_vars('ansibengineemc')
     if request.method == 'POST':
@@ -250,6 +273,7 @@ def runtraceroute(request):
     response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
     return HttpResponse(response.text, content_type = "application/json")
 
+##deprecated method
 def runinterfacetraceroute(request):
     baseurl = get_vars('ansibengineemc')
     if request.method == 'POST':

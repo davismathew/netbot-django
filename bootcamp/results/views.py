@@ -64,6 +64,7 @@ def runresult(request):
     headers = {'content-type': 'application/json'}
     ansibengineemc = get_vars('ansibengineemc')
     ansibenginemtn = get_vars('ansibenginemtn')
+    temp = {}
 
     if result.factstatus:
         if result.network == 'EMC':
@@ -73,20 +74,43 @@ def runresult(request):
         fact = result.factfile
         factdata={}
         factdata["fact"] = fact
-        factresponse = requests.post(facturl, data=json.dumps(factdata), headers=headers, auth=('netbot','N#tB@t'))
+        try:
+            factresponse = requests.post(facturl, data=json.dumps(factdata), headers=headers, auth=('netbot','N#tB@t'))
+            if not factresponse.status_code == 201 :
+                temp['value']="Error!! Unexpected response. Please report this"
+                return HttpResponse(json.dumps(temp), content_type = "application/json")
+
+        except requests.exceptions.RequestException as e:
+            # return "Error: {}".format(e)
+            temp['value']="Error connecting to API. Please report this"
+            return HttpResponse(json.dumps(temp), content_type = "application/json")
+
 
     if result.network == 'EMC':
         url = ansibengineemc+'/ansibengine/api/v1.0/runplaybook'
     else:
         url = ansibenginemtn+'/ansibengine/api/v1.0/runplaybook'
 
-    data={}
+    temp = {}
+    data = {}
     # data='{"playbook":"cisco_demo.yml" , "inventory":"dev","resultid":"1000","fact":"factshare.txt"}'
     data["playbook"] = playbook
     data["inventory"] = inventory
     data["resultid"] = resultid
     data["fact"] = fact
-    response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+
+    try:
+        response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+        if not response .status_code == 201 :
+            temp['value']="Error!! Unexpected response. Please report this"
+            return HttpResponse(json.dumps(temp), content_type = "application/json")
+
+    except requests.exceptions.RequestException as e:
+        # return "Error: {}".format(e)
+        temp['value']="Error connecting to API. Please report this"
+        return HttpResponse(json.dumps(temp), content_type = "application/json")
+
+
     stdoutfilename = "stdout"+str(result.id)+".out"
     if result.network == 'EMC':
         stdoutpath = emcpath

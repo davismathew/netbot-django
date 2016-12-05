@@ -74,13 +74,26 @@ def createinventory(request):
 
             # url = 'http://200.12.221.13:5555/ansibengine/api/v1.0/altinventory'
             headers = {'content-type': 'application/json'}
-            data= {}
+            temp = {}
+            data = {}
             data['variable']= form.cleaned_data.get('network')+str("inv")+str(inventory.id)
             data['inventory']= form.cleaned_data.get('variable')
 
             # data='{"variable":"10.10.10.102"}'
 #    data = '{"query":{"bool":{"must":[{"text":{"record.document":"SOME_JOURNAL"}},{"text":{"record.articleTitle":"farmers"}}],"must_not":[],"should":[]}},"from":0,"size":50,"sort":[],"facets":{}}'
-            response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+            try:
+                response = requests.post(url, data=json.dumps(data), headers=headers, auth=('netbot','N#tB@t'))
+                # if not response.status_code == 201 :
+                #     temp['value']="Error!! Unexpected response. Please report this"
+                #     return HttpResponse(json.dumps(temp), content_type = "application/json")
+                return redirect('/inventories/')
+
+            except requests.exceptions.RequestException as e:
+                # return "Error: {}".format(e)
+                # temp['value']="Error connecting to API. Please report this"
+                # return HttpResponse(json.dumps(temp), content_type = "application/json")
+                return redirect('/inventories/')
+
 
             # tags = form.cleaned_data.get('tags')
             # task.create_tags(tags)
