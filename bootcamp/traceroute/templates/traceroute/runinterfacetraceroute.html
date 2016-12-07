@@ -47,6 +47,8 @@ $(document).ready(function() {
                                   $('#AllResult').text(result.value);});
                                     $('#nodeip').on('click',function(){
                                   $('#AllResult').text(result.ipath);});
+                                    $('#sourcerouter').on('click',function(){
+                                  $('#AllResult').text(result.sourcerout);});
                         },
                    error:function(xhr, status, error) {
                                   $('#AllResult').show();
@@ -74,6 +76,7 @@ $(document).ready(function() {
        </center>
         <button type="button" id="node" class="btn btn-primary">Node Name</button>
         <button type="button" id="nodeip" class="btn btn-primary">Node & IP</button>
+        <button type="button" id="sourcerouter" class="btn btn-primary">Source Router</button>
 
 
 <nav class="navbar navbar-default">
