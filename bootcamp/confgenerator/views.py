@@ -63,7 +63,7 @@ def createconftemplate(request):
 @login_required
 def createconfinstance(request):
     if request.method == 'POST':
-        id=1
+        id=2
         variableinjson = str(get_variables(id).variable)
         variables = json.loads(variableinjson)
         form = ConfForm(request.POST or None, variables=variables)
@@ -77,7 +77,7 @@ def createconfinstance(request):
             confinstance.varvalues = json.dumps(output)
             confinstance.conftemplate = get_object_or_404(ConfTemplate, pk=id)
             confinstance.save()
-            create_playbook(output,'/var/ansible/Network-Automation/emc-Edge-RTR-Active.j2','/var/ansible/Network-Automation/EMC-Edge-RTR.txt')
+            create_playbook(output,'/var/ansible/templateGen/EMC-Edge-RTR-Active.j2','/var/ansible/templateGen/EMC-Edge-RTR.txt')
 
             playbookName = 'EMC-Edge-RTR-Active-template.yml'
             inventory = 'dev'
@@ -96,7 +96,7 @@ def createconfinstance(request):
 
 
 def create_playbook(variables,src,dest):
-    filepath = '/var/ansible' + '/Network-Automation/'
+    filepath = '/var/ansible' + '/templateGen/'
     target = open(filepath+'EMC-Edge-RTR-Active-template.yml', 'w')
     target.write('---')
     target.write("\n")

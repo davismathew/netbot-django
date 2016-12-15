@@ -11,7 +11,7 @@ class ConfForm(forms.ModelForm):
         super(ConfForm, self).__init__(*args, **kwargs)
 
         for i, question in enumerate(extra):
-            self.fields['custom_%s' % i] = forms.CharField(label=question,help_text=temp)
+            self.fields[question] = forms.CharField(label=question)
             # self.fields['name'].widget=forms.HiddenInput()
     class Meta:
         model = ConfTemplateInstance
