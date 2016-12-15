@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'bootcamp.cmapp',
     'bootcamp.traceroute',
     'bootcamp.core',
+    'bootcamp.confgenerator',
     'bootcamp.tasks',
     'bootcamp.feeds',
     'bootcamp.messenger',
@@ -120,4 +121,4 @@ ALLOWED_SIGNUP_DOMAINS = ['*']
 FILE_UPLOAD_TEMP_DIR = '/tmp/'
 FILE_UPLOAD_PERMISSIONS = 0644
 
-ENVIRONMENT = 'prod'
+ENVIRONMENT = 'stage'

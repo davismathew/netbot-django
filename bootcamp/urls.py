@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^ipam/', include('bootcamp.ipam.urls')),
     url(r'^inventories/', include('bootcamp.inventories.urls')),
     url(r'^results/', include('bootcamp.results.urls')),
+    url(r'^confgen/', include('bootcamp.confgenerator.urls')),
     url(r'^cmapp/', include('bootcamp.cmapp.urls')),
     url(r'^traceroute/', include('bootcamp.traceroute.urls')),
     url(r'^notifications/$', activities_views.notifications,
