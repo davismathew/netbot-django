@@ -49,7 +49,12 @@ def createconftemplate(request):
             status = form.cleaned_data.get('status')
             if status in [ConfTemplate.ACTIVE, ConfTemplate.DELETED]:
                 conftemplate.status = form.cleaned_data.get('status')
-            variablefields = ["test","testddnd","last"]
+
+            variablefields = []
+            with open('/etc/variablefields.txt') as f:
+    	        for line in f:
+        	        variablefields.append(line.rstrip('\n'))
+            # variablefields = ["hostname","enable_pass"]
             tempvar = json.dumps(variablefields)
             conftemplate.variable=tempvar
             conftemplate.save()
@@ -60,10 +65,30 @@ def createconftemplate(request):
         form = ConfTemplateForm()
     return render(request, 'confgenerator/createconftemplate.html', {'form': form})
 
+@login_required()
+def downloadtemplateout(request, id):
+    # taskid=request.POST['taskid']
+    # tasks = Task.objects.filter(pk=id)
+    confinst = get_object_or_404(ConfTemplateInstance, pk=id)
+    stdoutfile = "/etc/templateout/"+confinst.confoutfilename
+    fileRead = open(stdoutfile)
+    Output = fileRead.read()
+    Output=Output.replace("[0;32m","")
+    Output=Output.replace("[0;31m","")
+    Output=Output.replace("[0m"," ")
+    Output=Output.replace("\x1b"," ")
+    response = HttpResponse(content_type='text/plain')
+    filename = 'templateout'+str(confinst.id)+str(confinst.id)
+    response['Content-Disposition'] = 'attachment; filename="%s.txt"' % filename
+    response.write(Output)
+    return response
+
+
 @login_required
 def createconfinstance(request):
     if request.method == 'POST':
-        id=2
+        id=3
+        id = request.POST.get('confid')
         variableinjson = str(get_variables(id).variable)
         variables = json.loads(variableinjson)
         form = ConfForm(request.POST or None, variables=variables)
@@ -71,28 +96,43 @@ def createconfinstance(request):
             output={}
             for (key, value) in form.cleaned_data.iteritems():
                 output[key]=str(value)
+
+            del output['name']
             confinstance = ConfTemplateInstance()
             confinstance.create_user = request.user
             confinstance.name = str(get_variables(id).name)
             confinstance.varvalues = json.dumps(output)
             confinstance.conftemplate = get_object_or_404(ConfTemplate, pk=id)
             confinstance.save()
-            create_playbook(output,'/var/ansible/templateGen/EMC-Edge-RTR-Active.j2','/var/ansible/templateGen/EMC-Edge-RTR.txt')
+            conftemp = get_object_or_404(ConfTemplate, pk=confinstance.conftemplate.id)
+            srcfilename = str(conftemp.template)
+            destfilename = "conffile"+str(confinstance.id)+".txt"
+            confinstance.confoutfilename = destfilename
+            confinstance.save()
+            create_playbook(output,'/var/ansible/templateGen/'+srcfilename,'/etc/templateout/'+destfilename)
 
             playbookName = 'EMC-Edge-RTR-Active-template.yml'
             inventory = 'dev'
             playbookinst=AnsiblePlaybook(playbookName,inventory,'output.out')
             Output=playbookinst.runPlaybook()
+            # fileRead = open('output.txt')
+            # Output = fileRead.read()
+            # Output=Output.replace("[0;32m","")
+            # Output=Output.replace("[0;31m","")
+            # Output=Output.replace("[0m"," ")
+            # Output=Output.replace("\x1b"," ")
+
             # variable=form.cleaned_data.get('custom_0')
-            return render(request, "confgenerator/configurations.html", {'temporary': output})
+            return render(request, "confgenerator/configurations.html", {'temporary': Output, 'confid':confinstance.id})
             # return redirect("create_user_success")
     else:
-        id=2
+        id=3
+        id = request.GET.get('confid')
         variableinjson = str(get_variables(id).variable)
         variables = json.loads(variableinjson)
         form = ConfForm(variables=variables)
 
-    return render(request, "confgenerator/form.html", {'form': form})
+    return render(request, "confgenerator/form.html", {'form': form, 'conf': '3'})
 
 
 def create_playbook(variables,src,dest):

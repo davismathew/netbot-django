@@ -33,5 +33,6 @@
       <button type="button" class="btn btn-primary create">{% trans 'Create' %}</button>
       <a href="{% url 'listconf' %}" class="btn btn-default">{% trans 'Cancel' %}</a>
     </div>
+       <input hidden type="text" name="confid" id="confid" value="{{ conf }}"><br/><br/>
 </form>
 {% endblock main %}

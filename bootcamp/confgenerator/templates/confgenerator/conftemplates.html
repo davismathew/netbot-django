@@ -32,12 +32,12 @@
             <tr>
                 <td class="col-xs-1">  {{ conftemplate.id }}
 </td>
-                <td class="col-xs-2"><a href="{{ baseurl }}/confgen/confinstance/">{{ conftemplate.name }}</a></td>
+                <td class="col-xs-2"><a href="{{ baseurl }}/confgen/confinstance/?confid={{ conftemplate.id }}">{{ conftemplate.name }}</a></td>
                 <td class="col-xs-2.5">{{ conftemplate.description }}</td>
                 <td class="col-xs-2">{{ conftemplate.playbook }}</td>
                 <td class="col-xs-1">{{ conftemplate.network }}</td>
                 <td class="col-xs-2">
-                    <a href="{{ baseurl }}/tasks/runtask/{{ conftemplate.id }}">
+                    <a href="{{ baseurl }}/confgen/confinstance/?confid={{ conftemplate.id }}">
                         <span style="font-size:1.5em;" class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
                             </a>
                         Run conftemplate &nbsp;&nbsp;

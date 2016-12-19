@@ -53,6 +53,7 @@ class ConfTemplate(models.Model):
 class ConfTemplateInstance(models.Model):
     name = models.CharField(max_length=255,null=True,default="Something")
     varvalues = models.TextField(null=True)
+    confoutfilename = models.TextField(null=True)
     conftemplate = models.ForeignKey(ConfTemplate, null=True)
     create_user = models.ForeignKey(User)
     create_date = models.DateTimeField(auto_now_add=True)

@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^$', views.listconf, name='listconf'),
     url(r'^confinstance/$', csrf_exempt(views.createconfinstance), name='confinstance'),
     url(r'^createconf/$', views.createconftemplate, name='createconf'),
+    url(r'^downloadtemplateout/(?P<id>\d+)/$', csrf_exempt(views.downloadtemplateout), name='downloadtemplateout'),
     # url(r'^fetchipamcheck/$', views.fetchipamcheck, name='fetchipamcheck'),
     # url(r'^runipamcheck/$', csrf_exempt(views.runipamcheck), name='runipamcheck'),
     # url(r'^preview/$', views.preview, name='preview'),

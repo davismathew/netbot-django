@@ -26,7 +26,8 @@ class ConfTemplateForm(forms.ModelForm):
         max_length=255)
     template = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        max_length=255)
+        max_length=255,
+        help_text='Please do not use spaces in between, use "_" instead"')
     description = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=255)
@@ -39,6 +40,7 @@ class ConfTemplateForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=255, required=False,
         help_text='Use spaces to separate the tags, such as "interfaces emc automation"')
+    file = forms.FileField()
 
     class Meta:
         model = ConfTemplate
