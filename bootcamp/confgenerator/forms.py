@@ -40,7 +40,7 @@ class ConfTemplateForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=255, required=False,
         help_text='Use spaces to separate the tags, such as "interfaces emc automation"')
-    file = forms.FileField()
+    file = forms.FileField(required=False)
 
     class Meta:
         model = ConfTemplate
