@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from bootcamp.utils.loadconfig import get_vars
 import json
 from play_util.AnsiblePlaybook import AnsiblePlaybook
+import os.path
 
 def get_variables(id):
     variablesfromdb = get_object_or_404(ConfTemplate, pk=id)
@@ -87,7 +88,7 @@ def downloadtemplateout(request, id):
 @login_required
 def createconfinstance(request):
     if request.method == 'POST':
-        id=3
+        # id=3
         id = request.POST.get('confid')
         variableinjson = str(get_variables(id).variable)
         variables = json.loads(variableinjson)
@@ -111,28 +112,32 @@ def createconfinstance(request):
             confinstance.save()
             create_playbook(output,'/var/ansible/templateGen/'+srcfilename,'/etc/templateout/'+destfilename)
 
+            filegenstatus = 'false'
+            if os.path.isfile('/etc/templateout/'+destfilename):
+                filegenstatus = 'true'
+
             playbookName = 'EMC-Edge-RTR-Active-template.yml'
             inventory = 'dev'
-            playbookinst=AnsiblePlaybook(playbookName,inventory,'output.out')
+            playbookinst=AnsiblePlaybook(playbookName,inventory,'/etc/ansibout/output.out')
             Output=playbookinst.runPlaybook()
-            # fileRead = open('output.txt')
-            # Output = fileRead.read()
-            # Output=Output.replace("[0;32m","")
-            # Output=Output.replace("[0;31m","")
-            # Output=Output.replace("[0m"," ")
-            # Output=Output.replace("\x1b"," ")
+            fileRead = open('/etc/ansibout/output.out')
+            Output = fileRead.read()
+            Output=Output.replace("[0;32m","")
+            Output=Output.replace("[0;31m","")
+            Output=Output.replace("[0m"," ")
+            Output=Output.replace("\x1b"," ")
 
             # variable=form.cleaned_data.get('custom_0')
-            return render(request, "confgenerator/configurations.html", {'temporary': Output, 'confid':confinstance.id})
+            return render(request, "confgenerator/configurations.html", {'temporary': Output, 'confid':confinstance.id, 'filegenstatus' :filegenstatus})
             # return redirect("create_user_success")
     else:
-        id=3
+        # id=3
         id = request.GET.get('confid')
         variableinjson = str(get_variables(id).variable)
         variables = json.loads(variableinjson)
         form = ConfForm(variables=variables)
 
-    return render(request, "confgenerator/form.html", {'form': form, 'conf': '3'})
+    return render(request, "confgenerator/form.html", {'form': form, 'conf': id})
 
 
 def create_playbook(variables,src,dest):
