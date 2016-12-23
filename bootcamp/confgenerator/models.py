@@ -5,6 +5,8 @@ from datetime import datetime
 from django.template.defaultfilters import slugify
 import markdown
 
+import os
+
 
 class ConfTemplate(models.Model):
     ACTIVE = 'A'
@@ -14,17 +16,22 @@ class ConfTemplate(models.Model):
         (DELETED, 'Deleted'),
     )
 
-    name = models.CharField(max_length=255,null=True,default="Something")
+    name = models.CharField(max_length=255,null=True,default="Please ignore this field")
     description = models.TextField(max_length=4000)
     variable = models.TextField(null=True)
     template = models.TextField(null=True)
     helptext = models.TextField(null=True)
+    jinjatemplate = models.FileField(upload_to='templates/%Y/%m/%d',null=True)
+    variablefile = models.FileField(upload_to='variables/%Y/%m/%d',null=True)
     status = models.CharField(max_length=1, choices=STATUS, default=ACTIVE)
     create_user = models.ForeignKey(User)
     create_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(blank=True, null=True)
     update_user = models.ForeignKey(User, null=True, blank=True,
                                     related_name="+")
+
+    def filename(self):
+        return os.path.basename(self.jinjatemplate.name)
 
     class Meta:
         verbose_name = _("ConfTemplate")

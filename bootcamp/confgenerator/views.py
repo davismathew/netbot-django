@@ -8,6 +8,8 @@ from bootcamp.utils.loadconfig import get_vars
 import json
 from play_util.AnsiblePlaybook import AnsiblePlaybook
 import os.path
+from bootcamp.settings import MEDIA_ROOT
+from shutil import copy
 
 def get_variables(id):
     variablesfromdb = get_object_or_404(ConfTemplate, pk=id)
@@ -40,9 +42,9 @@ def listconf(request):
 @login_required
 def createconftemplate(request):
     if request.method == 'POST':
-        form = ConfTemplateForm(request.POST)
+        form = ConfTemplateForm(request.POST, request.FILES)
         if form.is_valid():
-            conftemplate = ConfTemplate()
+            conftemplate = ConfTemplate(jinjatemplate = request.FILES['jinjafile'],variablefile = request.FILES['variablefile'])
             conftemplate.create_user = request.user
             conftemplate.name = form.cleaned_data.get('name')
             conftemplate.playbook = form.cleaned_data.get('playbook')
@@ -51,14 +53,32 @@ def createconftemplate(request):
             if status in [ConfTemplate.ACTIVE, ConfTemplate.DELETED]:
                 conftemplate.status = form.cleaned_data.get('status')
 
+            # variablefields = []
+            # with open('/etc/variablefields.txt') as f:
+    	     #    for line in f:
+        	 #        variablefields.append(line.rstrip('\n'))
+            # # variablefields = ["hostname","enable_pass"]
+            # tempvar = json.dumps(variablefields)
+            # conftemplate.variable=tempvar
+            conftemplate.save()
+
+            conftemp = get_object_or_404(ConfTemplate, pk=conftemplate.id)
+
             variablefields = []
-            with open('/etc/variablefields.txt') as f:
+            with open(str(MEDIA_ROOT)+"/"+str(conftemp.variablefile)) as f:
     	        for line in f:
         	        variablefields.append(line.rstrip('\n'))
             # variablefields = ["hostname","enable_pass"]
             tempvar = json.dumps(variablefields)
-            conftemplate.variable=tempvar
-            conftemplate.save()
+            conftemp.variable=tempvar
+            conftemp.save()
+            src = str(MEDIA_ROOT)+"/"+str(conftemp.jinjatemplate)
+            dst = '/var/ansible/templateGen'
+
+            try:
+                copy(src,dst)
+            except IOError, e:
+                print "Unable to copy file. %s" % e
             # tags = form.cleaned_data.get('tags')
             # task.create_tags(tags)
             return redirect('/confgen/')
@@ -106,7 +126,7 @@ def createconfinstance(request):
             confinstance.conftemplate = get_object_or_404(ConfTemplate, pk=id)
             confinstance.save()
             conftemp = get_object_or_404(ConfTemplate, pk=confinstance.conftemplate.id)
-            srcfilename = str(conftemp.template)
+            srcfilename = str(conftemp.filename()) #str(conftemp.jinjatemplate)
             destfilename = "conffile"+str(confinstance.id)+".txt"
             confinstance.confoutfilename = destfilename
             confinstance.save()
