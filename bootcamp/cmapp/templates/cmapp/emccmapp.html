@@ -331,10 +331,10 @@ function ajaxindicatorstart(text)
                      if(tableName == "CS")
                        {
 
-
+            var baseurl=$('#baseurl').val();
 		          $.ajax({
                                           type: "POST",
-                                          url: "http://200.12.221.43:5000/coreCircuitDetails",
+                                          url: baseurl+"/cmapp/coreCircuitDetails/0/",
 					  crossDomain : true,
                                           crossOrigin : true,
                                           processData : false,
@@ -396,10 +396,10 @@ function ajaxindicatorstart(text)
                       }
 		      else if(tableName == "CSS")
 		      {
-
+                    var baseurl=$('#baseurl').val();
                             $.ajax({
                                           type: "POST",
-                                          url: "http://200.12.221.43:5000/coreCircuitStates",
+                                          url: baseurl+"/cmapp/coreCircuitStates/0/",
 
                                           success:function(result){
 
@@ -541,6 +541,7 @@ function ajaxindicatorstart(text)
     </div>
   </div>
 </nav>
+       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
 
 {% endblock main %}
 
