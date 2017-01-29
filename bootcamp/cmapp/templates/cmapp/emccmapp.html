@@ -124,9 +124,10 @@ html, body {
                     var tr=$(this).closest('tr');
                     if(identity == "NS")
                        {
+                            var baseurl=$('#baseurl').val();
                                 $.ajax({
                                           type: "POST",
-                                          url: "http://200.12.221.43:5000/delONSRecord",
+                                         url: baseurl+"/cmapp/delONSRecord/0/",
 				          data: { nodeName : ICID, city : city }, // post values
                                           success:function(result){
                                                         tr.remove();
@@ -139,10 +140,10 @@ html, body {
                       }
                     else
                       {
-
+                    var baseurl=$('#baseurl').val();
                            $.ajax({
                                      type: "POST",
-                                     url: "http://200.12.221.43:5000/delCCSRecord",
+                                     url: baseurl+"/cmapp/delCCSRecord/0/",
                                      data: { icd : ICID }, // post values
                                      success:function(result){
                                                   tr.remove();
@@ -170,8 +171,9 @@ html, body {
 
 	        ajaxindicatorstart('Processing data.. please wait..');
                 $.ajax({
+                    var baseurl=$('#baseurl').val();
                             type: "POST",
-                            url: "http://200.12.221.43:5000/allRowPingTest",
+                            url: baseurl+"/cmapp/allRowPingTest/0/",
                             data: { value : data }, // post values
                             success:function(result){
 			              ajaxindicatorstop();
@@ -207,8 +209,9 @@ html, body {
              var tr=$(this).closest('tr');
 	     ajaxindicatorstart('Processing data.. please wait..');
              $.ajax({
+                    var baseurl=$('#baseurl').val();
                       type: "POST",
-                      url: "http://200.12.221.43:5000/rowPingTest",
+                      url: baseurl+"/cmapp/rowPingTest/0/",
                       data: { pTag : pTag, ca : cAEnd, cai : cAEndInt, caa:cAEndIP, cz:cZEnd, czi:cZEndInt, cza:cZEndIP}, // post values
                       success:function(result){
 		                   ajaxindicatorstop();
@@ -452,10 +455,11 @@ function ajaxindicatorstart(text)
 		      }
 		      else if(tableName == "NS")
 		      {
-
+                    var baseurl=$('#baseurl').val();
 		               $.ajax({
                                           type: "POST",
-                                          url: "http://200.12.221.43:5000/orionNodeStates",
+                                          url: baseurl+"/cmapp/orionNodeStates/0/",
+
                                           success:function(result){
                                                  if(result.check == "False")
 					          {

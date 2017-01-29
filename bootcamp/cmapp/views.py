@@ -140,10 +140,10 @@ def rowPingTest(request, id):
 
     try:
         if id == '0':
-            response = requests.post(emcurl, data=json.dumps(data), headers=headers)
+            response = requests.post(emcurl, data=json.dumps(reqbody), headers=headers)
             # mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers)
         elif id == '1':
-            response = requests.post(mtnurl, data=json.dumps(data), headers=headers)
+            response = requests.post(mtnurl, data=json.dumps(reqbody), headers=headers)
             # mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers)
         if not response.status_code == 200:
             temp['value']="Error !! Unexpected response. Please report this"
@@ -160,72 +160,74 @@ def rowPingTest(request, id):
         # return "Error: {}".format(e)
         temp['value']="Error connecting to API. Please report this"
         return HttpResponse(json.dumps(temp), content_type = "application/json")
-    temp={}
-    temp['value'] = reqbody['ca']
-    return HttpResponse(json.dumps(temp), content_type = "application/json")
+
+    return HttpResponse(json.dumps(response), content_type = "application/json")
 
 @login_required()
 def allRowPingTest(request, id):
     emcbaseurl = get_vars('ansibengineemc')
     mtnbaseurl = get_vars('ansibenginemtn')
+    reqbody = {}
     if request.method == 'POST':
         baseurl = request.POST.get('baseurl')
-        destip = request.POST.get('destip')
+        reqbody['value'] = request.POST.get('value')
     # if request.method == 'POST':
     #     baseurl = request.POST.get('baseurl')
-
-    emcurl = 'http://200.12.221.43:5000' + '/allRowPingTest'
-    mtnurl = 'http://10.200.96.103:5000' + '/allRowPingTest'
+    emcurl = 'http://200.12.221.43:5000' + '/rowPingTest'
+    mtnurl = 'http://10.200.96.103:5000' + '/rowPingTest'
     headers = {'content-type': 'application/json'}
     data= {}
     temp={}
+    response=''
+    # data["value"] = "RAI_LND_1Gig_T-SYSTEM_0EV/3_Diessen,OEV/3 Diessen 56 SCF1 . London T7 / 7LB/2 / Port 15.3,DU1400739,RAI-LND,EMC_CORE_RAI_7606_2,GigabitEthernet3/24,10.10.10.71,EMC_CORE_LND_7606_2,GigabitEthernet1/2/1,10.10.10.203,Deutsche Telekom,999-RAI-LON-102-FB-Deutsche_Telekom-(CID-0EV/3-Diessen-1),20,35,40,+49 69 20060 55 58*EMC-DIVEO-XConn-CID:5511206801-MIAMI-BRAZIL-DIVEO-10Mbps-Copper,DU0506772,DU0506772,MIAMI-BRAZIL,EMC_CORE_MIAMI_ASR_2,GigabitEthernet0/0/3.101,10.10.10.226,EMC_CORE_BRAZ_ASR1K1_1,GigabitEthernet0/0/0,10.10.10.50,T-Systems,999-MIAMI-Brazil-101-CO-TSystems-(CID:5511206801_TSYSTEMS,139,144,149,0800160066,55113097-5239"
 
-    data["value"] = "RAI_LND_1Gig_T-SYSTEM_0EV/3_Diessen,OEV/3 Diessen 56 SCF1 . London T7 / 7LB/2 / Port 15.3,DU1400739,RAI-LND,EMC_CORE_RAI_7606_2,GigabitEthernet3/24,10.10.10.71,EMC_CORE_LND_7606_2,GigabitEthernet1/2/1,10.10.10.203,Deutsche Telekom,999-RAI-LON-102-FB-Deutsche_Telekom-(CID-0EV/3-Diessen-1),20,35,40,+49 69 20060 55 58*EMC-DIVEO-XConn-CID:5511206801-MIAMI-BRAZIL-DIVEO-10Mbps-Copper,DU0506772,DU0506772,MIAMI-BRAZIL,EMC_CORE_MIAMI_ASR_2,GigabitEthernet0/0/3.101,10.10.10.226,EMC_CORE_BRAZ_ASR1K1_1,GigabitEthernet0/0/0,10.10.10.50,T-Systems,999-MIAMI-Brazil-101-CO-TSystems-(CID:5511206801_TSYSTEMS,139,144,149,0800160066,55113097-5239"
 
     try:
-        if id == 0:
-            emcresponse = requests.post(emcurl, data=json.dumps(data), headers=headers)
+        if id == '0':
+            response = requests.post(emcurl, data=json.dumps(reqbody), headers=headers)
             # mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers)
-        else:
-            emcresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers)
+        elif id == '1':
+            response = requests.post(mtnurl, data=json.dumps(reqbody), headers=headers)
             # mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers)
-        if not emcresponse.status_code == 200:
+        if not response.status_code == 200:
             temp['value']="Error !! Unexpected response. Please report this"
             return HttpResponse(json.dumps(temp), content_type = "application/json")
-
 
     except requests.exceptions.RequestException as e:
         # return "Error: {}".format(e)
         temp['value']="Error connecting to API. Please report this"
         return HttpResponse(json.dumps(temp), content_type = "application/json")
-    return emcresponse
+
+    return HttpResponse(json.dumps(response), content_type = "application/json")
 
 @login_required()
 def delCCSRecord(request, id):
     emcbaseurl = get_vars('ansibengineemc')
     mtnbaseurl = get_vars('ansibenginemtn')
-    if request.method == 'POST':
-        baseurl = request.POST.get('baseurl')
-        destip = request.POST.get('destip')
-    # if request.method == 'POST':
-    #     baseurl = request.POST.get('baseurl')
+    reqbody = {}
 
-    emcurl = 'http://200.12.221.43:5000' + '/delCCSRecord'
-    mtnurl = 'http://10.200.96.103:5000' + '/delCCSRecord'
+    if request.method == 'DELETE':
+        baseurl = request.DELETE.get('baseurl')
+        reqbody['icd']= request.DELETE.get('icd')
+
+    emcurl = 'http://200.12.221.43:5000' + '/coreCircuitStates'
+    mtnurl = 'http://10.200.96.103:5000' + '/coreCircuitStates'
     headers = {'content-type': 'application/json'}
     data= {}
     temp={}
+    response=''
+    data["icd"] = reqbody['icd']
+    # data["icd"] = "Testing1"
 
-    data["icd"] = "Testing1"
 
     try:
-        if id == 0:
-            emcresponse = requests.delete(emcurl, data=json.dumps(data), headers=headers)
+        if id == '0':
+            response = requests.post(emcurl, data=json.dumps(data), headers=headers)
             # mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers)
-        else:
-            emcresponse = requests.delete(mtnurl, data=json.dumps(data), headers=headers)
+        elif id == '1':
+            response = requests.post(mtnurl, data=json.dumps(data), headers=headers)
             # mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers)
-        if not emcresponse.status_code == 200:
+        if not response.status_code == 200:
             temp['value']="Error !! Unexpected response. Please report this"
             return HttpResponse(json.dumps(temp), content_type = "application/json")
 
@@ -234,35 +236,39 @@ def delCCSRecord(request, id):
         # return "Error: {}".format(e)
         temp['value']="Error connecting to API. Please report this"
         return HttpResponse(json.dumps(temp), content_type = "application/json")
-    return emcresponse
+    return HttpResponse(response, content_type = "application/json")
+
 
 @login_required()
 def delONSRecord(request, id):
     emcbaseurl = get_vars('ansibengineemc')
     mtnbaseurl = get_vars('ansibenginemtn')
-    if request.method == 'POST':
-        baseurl = request.POST.get('baseurl')
-        destip = request.POST.get('destip')
-    # if request.method == 'POST':
-    #     baseurl = request.POST.get('baseurl')
+    reqbody = {}
 
-    emcurl = 'http://200.12.221.43:5000' + '/delONSRecord'
-    mtnurl = 'http://10.200.96.103:5000' + '/delONSRecord'
+    if request.method == 'DELETE':
+        baseurl = request.DELETE.get('baseurl')
+        reqbody['nodeName']= request.DELETE.get('nodeName')
+        reqbody['city']= request.DELETE.get('city')
+
+    emcurl = 'http://200.12.221.43:5000' + '/coreCircuitStates'
+    mtnurl = 'http://10.200.96.103:5000' + '/coreCircuitStates'
     headers = {'content-type': 'application/json'}
     data= {}
     temp={}
+    response=''
+    data["icd"] = reqbody['nodeName']
+    data["city"] = reqbody['city']
+    # data["icd"] = "Testing1"
 
-    data["nodeName"] = "EMC_TestingNode"
-    data["city"] = "Raisting"
 
     try:
-        if id == 0:
-            emcresponse = requests.delete(emcurl, data=json.dumps(data), headers=headers)
+        if id == '0':
+            response = requests.post(emcurl, data=json.dumps(data), headers=headers)
             # mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers)
-        else:
-            emcresponse = requests.delete(mtnurl, data=json.dumps(data), headers=headers)
+        elif id == '1':
+            response = requests.post(mtnurl, data=json.dumps(data), headers=headers)
             # mtnresponse = requests.post(mtnurl, data=json.dumps(data), headers=headers)
-        if not emcresponse.status_code == 200:
+        if not response.status_code == 200:
             temp['value']="Error !! Unexpected response. Please report this"
             return HttpResponse(json.dumps(temp), content_type = "application/json")
 
@@ -271,7 +277,7 @@ def delONSRecord(request, id):
         # return "Error: {}".format(e)
         temp['value']="Error connecting to API. Please report this"
         return HttpResponse(json.dumps(temp), content_type = "application/json")
-    return emcresponse
+    return HttpResponse(response, content_type = "application/json")
 
 @login_required
 def testapi(request):
