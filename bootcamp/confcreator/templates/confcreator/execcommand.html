@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{{ result.name }}{% endblock %}
+
+{% block head %}
+  <link href="{% static 'css/articles.css' %}" rel="stylesheet">
+  <script src="{% static 'js/articles.js' %}"></script>
+{% endblock head %}
+
+{% block main %}
+  <ol class="breadcrumb">
+    <li><a href="{% url 'listcreator' %}">{% trans 'Execute Command' %}</a></li>
+    <li class="active">{% trans 'Execute Command Details' %}</li>
+  </ol>
+
+  {% include 'confcreator/partial_execcommand.html' with id=id commands=commands emcinventory=emcinventory mtninventory=mtninventory %}
+
+{% endblock main %}

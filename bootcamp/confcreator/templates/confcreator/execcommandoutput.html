@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{{ result.name }}{% endblock %}
+{% block head %}
+  <link href="{% static 'css/articles.css' %}" rel="stylesheet">
+  <script src="{% static 'js/articles.js' %}"></script>
+{% endblock head %}
+
+{% block main %}
+
+  <ol class="breadcrumb">
+    <li><a href="{% url 'results' %}">{% trans 'ExecCommand' %}</a></li>
+    <li class="active">{% trans 'Exec Command Output Details' %}</li>
+  </ol>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <script>
+
+$(document).ready(function() {
+
+    var id=$('#id').val();
+    var inventory=$('#inventory').val();
+    var baseurl=$('#baseurl').val();
+    var test=200;
+    $('#progress').show();
+    $.ajax({
+                     type: "POST",
+                     url: baseurl+"/confcreate/runcommandoutapi/",
+                     data: { id : id , inventory : inventory},
+
+                   success:function(result){
+                                  $('#AllResult').show();
+                                  $('#successmessage').show();
+                                  $('#downloadlink').show();
+                                  $('#progress').hide();
+                                  $('#AllResult').text(result.value);
+                        },
+                   error:function(xhr, status, error) {
+                                  $('#AllResult').show();
+                                  $('#downloadlink').show();
+                                  $('#progress').hide();
+                                  alert("failed to run");
+                                  alert(xhr.status);
+                                  alert(status);
+                                  $('#AllResult').text(error);
+                   }
+            });
+
+
+});
+
+</script>
+
+
+
+
+
+       <!--  <div class="jumbotron"> -->
+
+<div class="alert alert-info" role="alert" id="successmessage" hidden>Playbook named '{{ result.playbook }}'  has executed on task named '{{ result.name }}'
+</div>
+       <center>
+       </center>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Stdout
+      </a>
+       <p class="navbar-text navbar-right" id="downloadlink" hidden>Download <a href="{{ baseurl }}/results/downloadstdout/{{ result.id }}" class="navbar-link">Output</a></p>
+        <div class="bs-example clearfix">
+       <textarea rows="100" cols="100" id="AllResult" hidden>
+
+       </textarea>
+
+</div>
+
+    </div>
+  </div>
+</nav>
+<div id="progress" class="progress">
+  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+    <span class="sr-only">100% Complete</span>
+  </div>
+</div>
+       <input hidden type="text" name="id" id="id" value="{{ id }}"><br/><br/>
+       <input hidden type="text" name="inventory" id="inventory" value="{{ inventory }}"><br/><br/>
+       <input hidden type="text" name="baseurl" id="baseurl" value="{{ baseurl }}"><br/><br/>
+
+
+{% endblock main %}

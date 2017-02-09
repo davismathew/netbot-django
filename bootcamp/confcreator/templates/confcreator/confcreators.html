@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+{% block title %}Ansible - Post{% endblock %}
+
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">  <link href="{% static 'css/tasks.css' %}?v=1" rel="stylesheet">
+  <script src="{% static 'js/createtask.js' %}"></script>
+{% endblock head %}
+
+{% block main %}
+    <a href="{% url 'createconfcreator' %}" class="btn btn-primary pull-right">
+      <span class="glyphicon glyphicon-plus"></span> {% trans 'Create Configuration' %}
+    </a>
+<div class="container">
+<table class="table table-hover">
+          <thead>
+            <tr>
+                <th class="col-xs-1"><strong> #</strong></th>
+                <th class="col-xs-2"><strong>Name</strong></th>
+                <th class="col-xs-2.5"><strong>Commands</strong></th>
+                <th class="col-xs-2"><strong>Action</strong></th>
+            </tr>
+        </thead>
+          <tbody>
+        {% for conftemplate in conftemplates %}
+            <tr>
+                <td class="col-xs-1">  {{ conftemplate.id }}
+</td>
+                <td class="col-xs-2"><a href="{{ baseurl }}/confgen/confinstance/?confid={{ conftemplate.id }}">{{ conftemplate.name }}</a></td>
+                <td class="col-xs-2.5">{{ conftemplate.commands }}</td>
+                <td class="col-xs-2">
+                    <a href="{{ baseurl }}/confcreate/executecommand/{{ conftemplate.id }}">
+                        <span style="font-size:1.5em;" class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
+                            </a>
+                        Run Exec Command &nbsp;&nbsp;
+
+                </td>
+            </tr>
+            {% empty %}
+          <h4 class="no-data">{% trans 'There is no configuration creator created yet' %}. <a href="{% url 'createtask' %}">{% trans 'Be the first one to create' %}!</a></h4>
+        {% endfor %}
+        </tbody>
+</table>
+</div>
+  <div class="row">
+    <div class="col-md-12">
+      {% include 'paginator.html' with paginator=conftemplates %}
+    </div>
+  </div>
+{% endblock main %}

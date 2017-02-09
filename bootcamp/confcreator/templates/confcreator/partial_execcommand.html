@@ -1,0 +1,80 @@
+<article xmlns="http://www.w3.org/1999/html">
+          <div class="container">
+            <div class="row">
+                <div class="col-lg-6  col-md-2 col-sm-4 col-xs-6">
+                    <h3><strong><span class="label label-default">Execute Command Details</span></strong></h3>
+                </div>
+                <div class="col-lg-6  col-md-2 col-sm-4 col-xs-6">
+                    <h3><strong><span class="label label-warning">Action</span></strong></h3>
+                </div>
+            </div>
+          <div class="container">
+                <div class="col-lg-6  col-md-2 col-sm-4 col-xs-6">
+                    <h3><a href="{{ baseurl }}/results/edit/{{ commands.id }}"> {{ commands.name }} </a></h3>
+                    <ul><h4>{{ commands.commands }}</h4>
+                    </ul>
+                </div>
+                <div class="col-lg-6  col-md-2 col-sm-4 col-xs-6">
+
+                  <form action="/confcreate/runcommand/" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" name="commands" value="{{ commands.commands }}" id="commands">
+                      <input type="hidden" name="id" value="{{ id }}" id="id">
+                    <div class="col-xs-6">
+                                      <label for="run"><h4></h4></label>
+                      <ul>
+                          {{ commands.command }}</br>
+                          {{ commands.network }}</br>
+                          {{ commands.inventory }}</br>
+                      </ul>
+                    </div>
+                  <div class="col-xs-6">
+                      <div class="form-group">
+                    <label for="inventory"><h4>Choose Inventory</h4></label>
+                      <select class="form-control" name="inventory" id="inventory">
+                        {% if commands.network == 'EMC' %}
+                          {{ commands.network }}
+                          {% for inv in emcinventory %}
+
+                        <option value={{ inv.filename }}>{{ inv.name }}</option>
+
+                          {% endfor %}
+                        {% endif %}
+
+                        {% if commands.network == 'MTN' %}
+                          {{ commands.network }}
+                          {% for inv in mtninventory %}
+
+                        <option value={{ inv.filename }}>{{ inv.name }}</option>
+
+                          {% endfor %}
+                        {% endif %}
+
+                      </select>
+                   </div>
+</div>
+                    <div class="col-xs-6">
+                        <button type="submit" class="btn btn-primary" value="run" id="run">Execute command</button></div>
+                    <ul>
+                    </ul>
+                      </div>
+                </div>
+
+              </div>
+
+                    </form>
+                      <div class="info">
+                        <span class="date">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        {{ commands.create_date }}
+                        </span>
+                        <span class="user">
+                            <a href="{% url 'profile' commands.create_user.username %}"><img src="{{ commands.create_user.profile.get_picture }}"></a>
+                            <a href="{% url 'profile' commands.create_user.username %}">{{ commands.create_user.profile.get_screen_name }}</a>
+                        </span>
+                      </div>
+
+
+            </div>
+</div>
+</article>
