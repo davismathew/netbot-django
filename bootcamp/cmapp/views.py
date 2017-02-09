@@ -23,9 +23,6 @@ def mtncm(request):
 def testmodal(request):
     return render(request, 'cmapp/task.html')
 
-@login_required
-def newmodal(request):
-    return render(request, 'cmapp/newmodal.html')
 
 @login_required()
 def coreCircuitStates(request, id):
@@ -279,9 +276,6 @@ def delONSRecord(request, id):
         return HttpResponse(json.dumps(temp), content_type = "application/json")
     return HttpResponse(response, content_type = "application/json")
 
-@login_required
-def testapi(request):
-    return render(request, 'cmapp/playoutput.html', {'result':'12','baseurl':'http://127.0.0.1:8000'})
 
 
 # def _inventories(request, inventories):
