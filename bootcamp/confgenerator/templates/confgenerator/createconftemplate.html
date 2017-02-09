@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 
-{% block title %}Traceroute{% endblock %}
+{% block title %}Configuration Creator{% endblock %}
 
 {% block head %}
   <link href="{% static 'css/articles.css' %}" rel="stylesheet">
@@ -11,10 +11,10 @@
 
 {% block main %}
   <ol class="breadcrumb">
-    <li><a href="{% url 'tasks' %}">{% trans 'Tasks' %}</a></li>
-    <li class="active">{% trans 'Create Task' %}</li>
+    <li><a href="{% url 'tasks' %}">{% trans 'Confiurations' %}</a></li>
+    <li class="active">{% trans 'Create Configuration' %}</li>
   </ol>
-  <form action="{% url 'createconf' %}" method="post" role="form" enctype="multipart/form-data">
+  <form action="{% url 'createconfcreator' %}" method="post" role="form">
     {% csrf_token %}
     {{ form.status }}
     {% for field in form.visible_fields %}
@@ -31,7 +31,7 @@
     {% endfor %}
     <div class="form-group">
       <button type="button" class="btn btn-primary create">{% trans 'Create' %}</button>
-      <a href="{% url 'listconf' %}" class="btn btn-default">{% trans 'Cancel' %}</a>
+      <a href="{% url 'listcreator' %}" class="btn btn-default">{% trans 'Cancel' %}</a>
     </div>
   </form>
 

@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'bootcamp.traceroute',
     'bootcamp.core',
     'bootcamp.confgenerator',
+    'bootcamp.confcreator',
     'bootcamp.tasks',
     'bootcamp.feeds',
     'bootcamp.messenger',
