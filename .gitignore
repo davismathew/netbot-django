@@ -60,3 +60,7 @@ media/
 
 venv_bootcamp/
 staticfiles
+
+# Pycharm env file
+.idea/workspace.xml
+
